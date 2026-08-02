@@ -1,0 +1,198 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Example values for deploying Seata Server with ValidatingWebhook enabled
+# Usage: helm install seata-server ./seata-server -f values-webhook-enabled.yaml
+
+global:
+  namespace: default
+
+seataServer:
+  name: seata-server
+  mode: cluster
+  
+  image:
+    repository: apache/seata-server
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  replicas: 3
+  
+  service:
+    name: seata-server-cluster
+    type: ClusterIP
+    ports:
+      service:
+        port: 8091
+        targetPort: 8091
+        protocol: TCP
+        name: service
+      console:
+        port: 7091
+        targetPort: 7091
+        protocol: TCP
+        name: console
+      raft:
+        port: 9091
+        targetPort: 9091
+        protocol: TCP
+        name: raft
+  
+  nodePort:
+    enabled: false
+    type: NodePort
+    ports:
+      service: 30091
+      console: 30092
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    reclaimPolicy: Retain
+  
+  ports:
+    console: 7091
+    service: 8091
+    raft: 9091
+  
+  env:
+    - name: console.user.username
+      value: seata
+    - name: console.user.password
+      valueFrom:
+        secretKeyRef:
+          name: seata-credentials
+          key: password
+    - name: store.mode
+      value: raft
+    - name: server.port
+      value: "7091"
+    - name: server.servicePort
+      value: "8091"
+
+secret:
+  create: true
+  name: seata-credentials
+  password: seata123456
+
+podSecurityPolicy:
+  enabled: false
+
+networkPolicy:
+  enabled: false
+
+ingress:
+  enabled: false
+
+monitoring:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+nodeAffinity:
+  enabled: false
+
+podAffinity:
+  enabled: false
+
+podAntiAffinity:
+  enabled: false
+  type: preferred
+  topologyKey: kubernetes.io/hostname
+
+tolerations: []
+
+nodeSelector: {}
+
+labels:
+  app: seata-server
+  version: v1
+
+annotations:
+  operator.seata.apache.org/managed: "true"
+
+# ============================================================================
+# Webhook Configuration - Enabled with cert-manager
+# ============================================================================
+webhook:
+  # Enable validating webhook for SeataServer resources
+  enabled: true
+  
+  # Webhook port
+  port: 8443
+  
+  # Webhook container port
+  containerPort: 8443
+  
+  # Failure policy: Fail or Ignore
+  # Fail: reject the request if webhook fails (more strict)
+  # Ignore: allow the request if webhook fails (more lenient)
+  failurePolicy: Fail
+  
+  # Reinvocation policy: Never or IfNeeded
+  reinvocationPolicy: Never
+  
+  # Namespace selector for webhook
+  # Only validate SeataServer resources in namespaces with matching labels
+  namespaceSelector:
+    matchLabels:
+      seata-webhook: "enabled"
+    matchExpressions: []
+      # Example: match namespaces with specific label
+      # - key: seata-validation
+      #   operator: In
+      #   values: ["enabled"]
+  
+  # Certificate management with cert-manager (recommended)
+  certManager:
+    enabled: true
+  
+  # TLS certificate and key (only used when certManager.enabled=false)
+  # Generate using:
+  #   openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+  # Encode using:
+  #   cat cert.pem | base64 | tr -d '\n'
+  tls:
+    crt: ""
+    key: ""
+  
+  # CA Bundle (base64 encoded)
+  # This is the CA certificate that signed the webhook TLS certificate
+  caBundle: ""
+

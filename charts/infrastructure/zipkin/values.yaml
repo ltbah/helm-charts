@@ -1,0 +1,23 @@
+zipkin:
+  ## Zipkin 副本数
+  replicaCount: 1
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    port: 9411
+
+  ## 存储配置
+  storage:
+    type: mem
+    # elasticsearch:
+    #   hosts: elasticsearch:9200

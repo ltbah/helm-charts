@@ -1,0 +1,15 @@
+XXL-JOB Admin has been deployed!
+
+Get the application URL:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "xxl-job.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8080 to use XXL-JOB Admin"
+  kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME 8080:8080
+
+Default login credentials:
+  Username: admin
+  Password: 123456
+
+{{- if .Values.mysql.enabled }}
+
+MySQL has been deployed as a dependency.
+{{- end }}

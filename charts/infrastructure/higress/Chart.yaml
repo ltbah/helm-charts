@@ -1,0 +1,10 @@
+apiVersion: v2
+name: higress
+description: Higress wrapper Chart for cloud-native API gateway
+type: application
+version: 1.0.0
+appVersion: "2.0"
+dependencies:
+  - name: higress
+    version: "2.x.x"
+    repository: https://higress.io/charts

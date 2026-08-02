@@ -1,0 +1,14 @@
+apiVersion: v2
+name: powerjob
+description: PowerJob distributed computing and task scheduling framework
+type: application
+version: 1.0.0
+appVersion: "4.3.9"
+keywords:
+  - powerjob
+  - scheduler
+  - task
+  - distributed-computing
+home: https://github.com/PowerJob/PowerJob
+maintainers:
+  - name: ltbah

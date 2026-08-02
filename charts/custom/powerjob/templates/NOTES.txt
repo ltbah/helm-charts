@@ -1,0 +1,20 @@
+PowerJob Server has been deployed!
+
+Get the application URL:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "powerjob.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:7700 to use PowerJob"
+  kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME 7700:7700
+
+Default login credentials:
+  Username: admin
+  Password: powerjob
+
+Worker akka port: {{ .Values.service.ports.akka }}
+{{- if .Values.postgresql.enabled }}
+
+PostgreSQL has been deployed as a dependency.
+{{- end }}
+{{- if .Values.redis.enabled }}
+
+Redis has been deployed as a dependency.
+{{- end }}

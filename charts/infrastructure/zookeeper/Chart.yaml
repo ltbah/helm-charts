@@ -1,0 +1,10 @@
+apiVersion: v2
+name: zookeeper
+description: ZooKeeper wrapper Chart
+type: application
+version: 1.0.0
+appVersion: "3.9"
+dependencies:
+  - name: zookeeper
+    version: "13.x.x"
+    repository: https://charts.bitnami.com/bitnami

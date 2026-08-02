@@ -1,0 +1,48 @@
+logstash:
+  ## Elasticsearch 连接配置
+  elasticsearchHosts: "https://elasticsearch:9200"
+
+  ## 副本数
+  replicas: 2
+
+  ## 持久化存储
+  persistence:
+    enabled: true
+    volumeClaimTemplate:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 5Gi
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+  ## JVM 堆内存
+  logstashJavaOpts: "-Xms1g -Xmx1g"
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    ports:
+      http: 8080
+
+  ## Pipeline 配置
+  logstashPipeline:
+    main.conf: |
+      input {
+        beats {
+          port => 5044
+        }
+      }
+      output {
+        elasticsearch {
+          hosts => ["https://elasticsearch:9200"]
+          index => "logstash-%{+YYYY.MM.dd}"
+        }
+      }

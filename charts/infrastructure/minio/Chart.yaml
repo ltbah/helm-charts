@@ -1,0 +1,17 @@
+apiVersion: v2
+name: minio
+description: MinIO wrapper Chart
+type: application
+version: 1.0.0
+appVersion: "2024.11"
+dependencies:
+  - name: operator
+    version: "6.x.x"
+    repository: https://minio.github.io/operator
+    alias: operator
+    condition: operator.enabled
+  - name: tenant
+    version: "0.x.x"
+    repository: https://minio.github.io/operator
+    alias: tenant
+    condition: tenant.enabled

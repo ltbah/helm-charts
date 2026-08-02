@@ -1,0 +1,10 @@
+apiVersion: v2
+name: mongodb
+description: MongoDB wrapper Chart
+type: application
+version: 1.0.0
+appVersion: "7.0"
+dependencies:
+  - name: mongodb
+    version: "15.x.x"
+    repository: https://charts.bitnami.com/bitnami

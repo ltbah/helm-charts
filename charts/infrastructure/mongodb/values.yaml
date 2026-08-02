@@ -1,0 +1,30 @@
+mongodb:
+  ## MongoDB 认证配置
+  auth:
+    rootPassword: ""
+    database: "appdb"
+    username: "appuser"
+    password: ""
+
+  ## 持久化存储
+  persistence:
+    enabled: true
+    size: 8Gi
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    port: 27017
+
+  ## metrics 监控
+  metrics:
+    enabled: false

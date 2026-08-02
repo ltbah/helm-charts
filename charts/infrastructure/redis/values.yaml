@@ -1,0 +1,38 @@
+redis:
+  ## Redis 认证配置
+  auth:
+    enabled: true
+    password: ""
+
+  ## 架构模式
+  architecture: standalone
+
+  ## 持久化存储
+  master:
+    persistence:
+      enabled: true
+      size: 4Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  ## 副本配置（sentinel/replication 模式下生效）
+  replica:
+    replicaCount: 2
+    persistence:
+      enabled: true
+      size: 4Gi
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
+
+  ## metrics 监控
+  metrics:
+    enabled: false

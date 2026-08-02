@@ -1,0 +1,34 @@
+mysql:
+  ## MySQL 认证配置
+  auth:
+    rootPassword: ""
+    database: "appdb"
+    username: "appuser"
+    password: ""
+
+  ## 持久化存储
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+  ## 字符集配置（Java 开发常用 utf8mb4）
+  initdbScripts:
+    charset.sql: |
+      ALTER DATABASE appdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    port: 3306
+
+  ## metrics 监控
+  metrics:
+    enabled: false

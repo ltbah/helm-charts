@@ -1,0 +1,32 @@
+higress:
+  ## Higress Gateway 配置
+  gateway:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+    service:
+      type: LoadBalancer
+      ports:
+        http: 80
+        https: 443
+
+  ## Controller 配置
+  controller:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+
+  ## 全局配置
+  global:
+    watchNamespace: ""
+    ingressClass: "higress"

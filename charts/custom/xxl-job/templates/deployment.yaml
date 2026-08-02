@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "xxl-job.fullname" . }}
+  labels:
+    {{- include "xxl-job.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "xxl-job.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "xxl-job.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PARAMS
+              value: >-
+                --spring.datasource.driver-class-name={{ .Values.params.jdbcDriverClass }}
+                --spring.datasource.url={{ include "xxl-job.jdbcUrl" . }}
+                --spring.datasource.username={{ include "xxl-job.jdbcUsername" . }}
+                --spring.datasource.password={{ include "xxl-job.jdbcPassword" . }}
+                {{- if .Values.params.mailHost }}
+                --spring.mail.host={{ .Values.params.mailHost }}
+                {{- end }}
+                {{- if .Values.params.mailPort }}
+                --spring.mail.port={{ .Values.params.mailPort }}
+                {{- end }}
+                {{- if .Values.params.mailUsername }}
+                --spring.mail.username={{ .Values.params.mailUsername }}
+                {{- end }}
+                {{- if .Values.params.mailPassword }}
+                --spring.mail.password={{ .Values.params.mailPassword }}
+                {{- end }}
+                {{- if .Values.params.mailSsl }}
+                --spring.mail.properties.mail.smtp.ssl.enable={{ .Values.params.mailSsl }}
+                {{- end }}
+                {{- if .Values.params.mailFrom }}
+                --spring.mail.properties.mail.smtp.from={{ .Values.params.mailFrom }}
+                {{- end }}
+                {{- if .Values.params.accessToken }}
+                --xxl.job.accessToken={{ .Values.params.accessToken }}
+                {{- end }}
+                {{- if .Values.params.logretentiondays }}
+                --xxl.job.logretentiondays={{ .Values.params.logretentiondays }}
+                {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: log
+              mountPath: /data/applogs
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ include "xxl-job.fullname" . }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

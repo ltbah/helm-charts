@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kafka
+description: Kafka wrapper Chart
+type: application
+version: 1.0.0
+appVersion: "3.8"
+dependencies:
+  - name: kafka
+    version: "30.x.x"
+    repository: https://charts.bitnami.com/bitnami

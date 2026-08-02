@@ -1,0 +1,119 @@
+## XXL-JOB Admin 配置
+replicaCount: 1
+
+image:
+  repository: xuxueli/xxl-job-admin
+  tag: "2.4.2"
+  pullPolicy: IfNotPresent
+
+## XXL-JOB 参数配置
+params:
+  ## 数据库配置
+  jdbcDriverClass: "com.mysql.cj.jdbc.Driver"
+  jdbcUrl: ""
+  jdbcUsername: "xxljob"
+  jdbcPassword: ""
+  ## 如果使用内置 MySQL，以下配置会自动填充
+  # jdbcUrl 将自动设为: jdbc:mysql://{{ .Release.Name }}-mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+  # jdbcUsername 将自动设为: xxljob
+  # jdbcPassword 将自动设为: xxljob
+
+  ## 邮件告警配置
+  mailHost: ""
+  mailPort: ""
+  mailUsername: ""
+  mailPassword: ""
+  mailSsl: "false"
+  mailFrom: ""
+
+  ## 访问令牌
+  accessToken: ""
+
+  ## 日志保留天数
+  logretentiondays: "30"
+
+## 服务配置
+service:
+  type: ClusterIP
+  port: 8080
+
+## Ingress 配置
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  #   - host: xxl-job.example.com
+  #     paths:
+  #       - path: /
+  tls: []
+
+## 资源配置
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+## 持久化配置（日志存储）
+persistence:
+  enabled: false
+  size: 1Gi
+  storageClassName: ""
+  accessMode: ReadWriteOnce
+
+## 就绪探针
+readinessProbe:
+  httpGet:
+    path: /xxl-job-admin/
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+## 存活探针
+livenessProbe:
+  httpGet:
+    path: /xxl-job-admin/
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 30
+
+## Pod 注解
+podAnnotations: {}
+
+## Pod 标签
+podLabels: {}
+
+## 节点选择器
+nodeSelector: {}
+
+## 容忍度
+tolerations: []
+
+## 亲和性
+affinity: {}
+
+## 内置 MySQL 配置
+mysql:
+  enabled: true
+  auth:
+    rootPassword: "xxljob"
+    database: "xxl_job"
+    username: "xxljob"
+    password: "xxljob"
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+  initdbScripts:
+    charset.sql: |
+      ALTER DATABASE xxl_job CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

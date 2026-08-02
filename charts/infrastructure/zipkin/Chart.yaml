@@ -1,0 +1,10 @@
+apiVersion: v2
+name: zipkin
+description: Zipkin wrapper Chart for distributed tracing
+type: application
+version: 1.0.0
+appVersion: "3.4"
+dependencies:
+  - name: zipkin
+    version: "1.x.x"
+    repository: https://zipkin.io/zipkin-helm

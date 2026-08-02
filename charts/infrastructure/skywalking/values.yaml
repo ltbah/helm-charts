@@ -1,0 +1,37 @@
+skywalking:
+  ## OAP Server 配置
+  oap:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: "2"
+        memory: 2Gi
+    storage:
+      type: elasticsearch
+      elasticsearch:
+        hosts: "http://elasticsearch:9200"
+
+  ## UI 配置
+  ui:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    service:
+      type: ClusterIP
+      port: 80
+
+  ## Satellite 配置
+  satellite:
+    enabled: false
+
+  ## Event 配置
+  event:
+    enabled: false

@@ -1,0 +1,43 @@
+prometheus:
+  ## Prometheus 服务配置
+  server:
+    replicaCount: 1
+    persistentVolume:
+      enabled: true
+      size: 10Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 2Gi
+
+    ## 数据保留时间
+    retention: "15d"
+
+  ## Alertmanager 配置
+  alertmanager:
+    enabled: true
+    persistentVolume:
+      enabled: true
+      size: 2Gi
+
+  ## Pushgateway 配置
+  pushgateway:
+    enabled: true
+
+  ## Node Exporter
+  nodeExporter:
+    enabled: true
+
+  ## kube-state-metrics
+  kubeStateMetrics:
+    enabled: true
+
+  ## 服务配置
+  server:
+    service:
+      type: ClusterIP
+      ports:
+        http: 9090

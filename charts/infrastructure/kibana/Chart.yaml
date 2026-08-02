@@ -1,0 +1,10 @@
+apiVersion: v2
+name: kibana
+description: Kibana wrapper Chart for Elasticsearch visualization
+type: application
+version: 1.0.0
+appVersion: "8.15"
+dependencies:
+  - name: kibana
+    version: "8.5.x"
+    repository: https://helm.elastic.co

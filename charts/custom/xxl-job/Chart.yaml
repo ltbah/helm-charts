@@ -1,0 +1,18 @@
+apiVersion: v2
+name: xxl-job
+description: XXL-JOB distributed task scheduling platform
+type: application
+version: 1.0.0
+appVersion: "2.4.2"
+keywords:
+  - xxl-job
+  - scheduler
+  - task
+home: https://github.com/xuxueli/xxl-job
+maintainers:
+  - name: ltbah
+dependencies:
+  - name: mysql
+    version: "12.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled

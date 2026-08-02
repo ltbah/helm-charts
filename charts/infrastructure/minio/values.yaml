@@ -1,0 +1,42 @@
+operator:
+  ## MinIO Operator 开关
+  enabled: true
+
+  ## Operator 副本数
+  replicaCount: 2
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+tenant:
+  ## MinIO Tenant 开关
+  enabled: true
+
+  ## Tenant 配置
+  name: minio-tenant
+
+  ## 认证配置
+  secrets:
+    accessKey: "minioadmin"
+    secretKey: "minioadmin"
+
+  ## 存储配置
+  pools:
+    - name: pool-0
+      servers: 4
+      volumesPerServer: 1
+      size: 10Gi
+      storageClassName: ""
+
+  ## 服务配置
+  expose:
+    type: ClusterIP
+    ports:
+      api: 9000
+      console: 9001

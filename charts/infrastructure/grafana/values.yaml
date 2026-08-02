@@ -1,0 +1,50 @@
+grafana:
+  ## Grafana 管理员配置
+  adminPassword: "admin"
+
+  ## 副本数
+  replicas: 1
+
+  ## 持久化存储
+  persistence:
+    enabled: true
+    size: 5Gi
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    port: 80
+
+  ## 数据源配置
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://prometheus-server:80
+          access: proxy
+          isDefault: true
+
+  ## Dashboard Provider
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: default
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default

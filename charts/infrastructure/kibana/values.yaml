@@ -1,0 +1,23 @@
+kibana:
+  ## Elasticsearch 连接配置
+  elasticsearchHosts: "https://elasticsearch:9200"
+
+  ## 副本数
+  replicas: 1
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    port: 5601
+
+  ## 安全配置
+  protocol: https

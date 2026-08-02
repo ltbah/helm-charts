@@ -1,0 +1,39 @@
+elasticsearch:
+  ## 集群配置
+  clusterName: "elasticsearch"
+
+  ## 副本数
+  replicas: 3
+
+  ## 持久化存储
+  volumeClaimTemplate:
+    accessModes: ["ReadWriteOnce"]
+    resources:
+      requests:
+        storage: 30Gi
+
+  ## 资源配置
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+
+  ## JVM 堆内存
+  esJavaOpts: "-Xms2g -Xmx2g"
+
+  ## 服务配置
+  service:
+    type: ClusterIP
+    ports:
+      http: 9200
+      transport: 9300
+
+  ## 安全配置
+  protocol: https
+
+  ## Keystore 配置
+  keystore:
+    - secretName: elasticsearch-credentials

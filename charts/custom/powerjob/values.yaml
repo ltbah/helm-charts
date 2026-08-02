@@ -1,0 +1,166 @@
+## PowerJob Server 配置
+replicaCount: 1
+
+image:
+  repository: powerjob/powerjob-server
+  tag: "4.3.9"
+  pullPolicy: IfNotPresent
+
+## PowerJob 参数配置
+params:
+  ## 数据库配置（支持 PostgreSQL / MySQL）
+  dbType: "postgresql"
+  ## PostgreSQL 配置
+  postgresql:
+    host: ""
+    port: "5432"
+    username: "powerjob"
+    password: "powerjob"
+    database: "powerjob"
+  ## MySQL 配置（dbType=mysql 时使用）
+  mysql:
+    host: ""
+    port: "3306"
+    username: "powerjob"
+    password: "powerjob"
+    database: "powerjob"
+
+  ## MongoDB 配置（可选，用于工作流和运行时数据）
+  mongodb:
+    enabled: false
+    host: ""
+    port: "27017"
+    username: ""
+    password: ""
+    database: "powerjob"
+
+  ## 缓存配置
+  omsCacheType: "redis"
+  redis:
+    host: ""
+    port: "6379"
+    password: ""
+
+  ## 邮件告警配置
+  mail:
+    enabled: false
+    host: ""
+    port: ""
+    username: ""
+    password: ""
+    ssl: "false"
+    from: ""
+
+  ## AKKA 配置
+  akka:
+    port: "10086"
+
+  ## HTTP 配置
+  http:
+    port: "7700"
+
+## 内置 PostgreSQL 配置
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "powerjob"
+    database: "powerjob"
+    username: "powerjob"
+    password: "powerjob"
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+## 内置 Redis 配置
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: "powerjob"
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+## 服务配置
+service:
+  type: ClusterIP
+  ports:
+    http: 7700
+    akka: 10086
+
+## Ingress 配置
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  #   - host: powerjob.example.com
+  #     paths:
+  #       - path: /
+  tls: []
+
+## 资源配置
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+## JVM 参数
+javaOpts: "-Xms1g -Xmx1g"
+
+## 持久化配置
+persistence:
+  enabled: false
+  size: 5Gi
+  storageClassName: ""
+  accessMode: ReadWriteOnce
+
+## 就绪探针
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+## 存活探针
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 30
+
+## Pod 注解
+podAnnotations: {}
+
+## Pod 标签
+podLabels: {}
+
+## 节点选择器
+nodeSelector: {}
+
+## 容忍度
+tolerations: []
+
+## 亲和性
+affinity: {}

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: filebeat
+description: Filebeat wrapper Chart for log collection
+type: application
+version: 1.0.0
+appVersion: "8.15"
+dependencies:
+  - name: filebeat
+    version: "8.5.x"
+    repository: https://helm.elastic.co
