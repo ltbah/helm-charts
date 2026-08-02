@@ -1,4 +1,10 @@
 mongodb:
+  ## 镜像配置
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: IfNotPresent
+
   ## ------------------------------------------------------------------
   ## Architecture: standalone (单节点) or replicaset (副本集)
   ## ------------------------------------------------------------------
@@ -99,6 +105,26 @@ mongodb:
     timeoutSeconds: 5
     failureThreshold: 6
     successThreshold: 1
+
+  ## ------------------------------------------------------------------
+  ## Ingress 配置（支持 Higress 网关）
+  ## ------------------------------------------------------------------
+  ingress:
+    ## 是否启用 Ingress
+    enabled: false
+    ## Ingress 类名，使用 Higress 时设为 "higress"
+    className: "higress"
+    ## 域名后缀，部署时通过 --set 设置，如 --set mongodb.ingress.domainSuffix=example.com
+    ## 最终域名格式: {release-name}-{service}.{domainSuffix}
+    domainSuffix: ""
+    ## 自定义域名（优先级高于 domainSuffix，设置后忽略 domainSuffix）
+    host: ""
+    ## TLS 配置
+    tls:
+      enabled: false
+      secretName: ""
+    ## Ingress 注解
+    annotations: {}
 
   ## ------------------------------------------------------------------
   ## Metrics (Prometheus Exporter)

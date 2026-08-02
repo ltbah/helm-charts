@@ -40,12 +40,13 @@ service:
 ## Ingress 配置
 ingress:
   enabled: false
+  ## Ingress 类名，可选: higress, nginx 等
   className: ""
+  ## 域名后缀
+  domainSuffix: ""
+  ## 自定义域名（优先级高于 domainSuffix）
+  host: ""
   annotations: {}
-  hosts: []
-  #   - host: xxl-job.example.com
-  #     paths:
-  #       - path: /
   tls: []
 
 ## 资源配置

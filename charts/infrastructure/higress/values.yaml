@@ -1,4 +1,24 @@
 higress:
+  ## 镜像配置
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Ingress 配置
+  ingress:
+    enabled: false
+    ## Ingress 类名，可选: higress, nginx 等
+    className: ""
+    ## 域名后缀，如 --set higress.ingress.domainSuffix=example.com
+    domainSuffix: ""
+    ## 自定义域名（优先级高于 domainSuffix）
+    host: ""
+    tls:
+      enabled: false
+      secretName: ""
+    annotations: {}
+
   ## Gateway 配置
   gateway:
     ## Gateway 副本数

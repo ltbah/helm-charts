@@ -77,6 +77,14 @@ helm install my-redis ltbah/redis \
 
 ## 参数列表
 
+### 镜像配置
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `redis.image.repository` | `""` | 镜像仓库地址，空值使用上游默认 |
+| `redis.image.tag` | `""` | 镜像标签，空值使用上游默认（跟随 appVersion） |
+| `redis.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
+
 ### 全局
 
 | 参数 | 默认值 | 说明 |
@@ -169,6 +177,18 @@ helm install my-redis ltbah/redis \
 | `redis.tls.enabled` | `false` | 是否启用 TLS |
 | `redis.tls.certificatesSecret` | `""` | TLS 证书 Secret 名称 |
 
+### Ingress / Higress 网关
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `redis.ingress.enabled` | `false` | 是否启用 Ingress |
+| `redis.ingress.className` | `"higress"` | Ingress 类名，使用 Higress 时设为 "higress" |
+| `redis.ingress.domainSuffix` | `""` | 域名后缀，最终域名格式: {release-name}-{service}.{domainSuffix} |
+| `redis.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `redis.ingress.tls.enabled` | `false` | 是否启用 TLS |
+| `redis.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
+| `redis.ingress.annotations` | `{}` | Ingress 注解 |
+
 ### Network Policy
 
 | 参数 | 默认值 | 说明 |
@@ -228,6 +248,23 @@ helm install my-redis ltbah/redis \
   --set redis.networkPolicy.enabled=true \
   --set redis.volumePermissions.enabled=true \
   --set redis.sysctl.enabled=true
+```
+
+### 通过 Higress 网关暴露服务
+
+```bash
+# 通过 Higress 网关暴露服务
+helm install my-redis ltbah/redis \
+  --set redis.auth.password=yourpassword \
+  --set redis.ingress.enabled=true \
+  --set redis.ingress.className=higress \
+  --set redis.ingress.domainSuffix=example.com
+```
+
+如需 TLS：
+```bash
+  --set redis.ingress.tls.enabled=true \
+  --set redis.ingress.tls.secretName=redis-tls
 ```
 
 ## 更多配置

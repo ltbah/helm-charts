@@ -2,6 +2,21 @@
 
 Wrapper Chart for [Grafana Helm Chart](https://github.com/grafana/helm-charts/tree/main/charts/grafana)，提供数据可视化和仪表盘的默认配置。
 
+## 使用示例
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-grafana ltbah/grafana \
+  --set grafana.adminPassword=yourpassword \
+  --set grafana.ingress.enabled=true \
+  --set grafana.ingress.className=higress \
+  --set grafana.ingress.domainSuffix=example.com
+
+# 指定镜像版本
+helm install my-grafana ltbah/grafana \
+  --set grafana.image.tag=11.2.0
+```
+
 ## 最简安装
 
 ```bash
@@ -47,6 +62,26 @@ helm install my-grafana ltbah/grafana -f my-values.yaml
 
 ## 参数列表
 
+### 镜像配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `grafana.image.repository` | 镜像仓库 | `""` |
+| `grafana.image.tag` | 镜像标签 | `""` |
+| `grafana.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
+
+### Ingress 配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `grafana.ingress.enabled` | 启用 Ingress | `false` |
+| `grafana.ingress.className` | Ingress 类名 (higress, nginx 等) | `""` |
+| `grafana.ingress.domainSuffix` | 域名后缀 | `""` |
+| `grafana.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `grafana.ingress.tls.enabled` | 启用 TLS | `false` |
+| `grafana.ingress.tls.secretName` | TLS Secret 名称 | `""` |
+| `grafana.ingress.annotations` | Ingress 注解 | `{}` |
+
 ### 核心
 
 | 参数 | 说明 | 默认值 |
@@ -77,15 +112,6 @@ helm install my-grafana ltbah/grafana -f my-values.yaml
 |------|------|--------|
 | `grafana.service.type` | Service 类型 | `ClusterIP` |
 | `grafana.service.port` | 端口 | `80` |
-
-### Ingress
-
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
-| `grafana.ingress.enabled` | 启用 Ingress | `false` |
-| `grafana.ingress.hosts` | 域名列表 | `[]` |
-| `grafana.ingress.tls` | TLS 配置 | `[]` |
-| `grafana.ingress.annotations` | Ingress 注解 | `{}` |
 
 ### 调度
 

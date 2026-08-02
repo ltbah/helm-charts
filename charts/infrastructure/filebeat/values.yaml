@@ -1,4 +1,10 @@
 filebeat:
+  ## 镜像配置
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: IfNotPresent
+
   # -- Filebeat configuration (filebeat.yml)
   filebeatConfig: {}
     # filebeat.yml: |
@@ -70,10 +76,20 @@ filebeat:
         port: 5066
         targetPort: 5066
 
-  # -- Ingress configuration
+  ## Ingress 配置
   ingress:
+    ## 是否启用 Ingress
     enabled: false
-    hosts: []
-      # - host: filebeat.local
-      #   paths:
-      #     - path: /
+    ## Ingress 类名，可选: higress, nginx 等，根据集群 Ingress Controller 选择
+    className: ""
+    ## 域名后缀，部署时设置，如 --set filebeat.ingress.domainSuffix=example.com
+    ## 最终域名格式: {release-name}-{service}.{domainSuffix}
+    domainSuffix: ""
+    ## 自定义域名（优先级高于 domainSuffix）
+    host: ""
+    ## TLS 配置
+    tls:
+      enabled: false
+      secretName: ""
+    ## Ingress 注解
+    annotations: {}

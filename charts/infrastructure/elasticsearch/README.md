@@ -84,6 +84,9 @@ helm install my-es ltbah/elasticsearch -f values-prod.yaml
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `elasticsearch.image.repository` | `""` | 镜像仓库地址，空值使用上游 Chart 默认 |
+| `elasticsearch.image.tag` | `""` | 镜像标签，空值使用上游 Chart 默认版本 |
+| `elasticsearch.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
 | `elasticsearch.clusterName` | `elasticsearch` | 集群名称，同集群内所有节点必须一致 |
 | `elasticsearch.nodeGroup` | `master` | 节点组名称，用于区分不同角色组 |
 | `elasticsearch.masterService` | `""` | Master 服务名称，多节点组部署时 data/ingest 节点组需指向 master 组 |
@@ -134,9 +137,12 @@ helm install my-es ltbah/elasticsearch -f values-prod.yaml
 | `elasticsearch.startupProbe.successThreshold` | `1` | Startup 成功阈值 |
 | `elasticsearch.startupProbe.timeoutSeconds` | `5` | Startup 超时 |
 | `elasticsearch.ingress.enabled` | `false` | 是否启用 Ingress |
+| `elasticsearch.ingress.className` | `""` | Ingress 类名 (higress, nginx 等) |
+| `elasticsearch.ingress.domainSuffix` | `""` | 域名后缀，最终域名: {release-name}-{service}.{domainSuffix} |
+| `elasticsearch.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `elasticsearch.ingress.tls.enabled` | `false` | 是否启用 Ingress TLS |
+| `elasticsearch.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
 | `elasticsearch.ingress.annotations` | `{}` | Ingress 注解 |
-| `elasticsearch.ingress.hosts` | `[]` | Ingress 主机规则 |
-| `elasticsearch.ingress.tls` | `[]` | Ingress TLS 配置 |
 | `elasticsearch.secretsKeystoreEnabled` | `false` | 是否启用 Secrets Keystore 自动挂载 |
 
 ## 测试/生产推荐配置
@@ -244,3 +250,19 @@ elasticsearch:
 ```
 
 > 生产环境建议分离 master 与 data 节点组，分别部署多套 Release，通过 `masterService` 互相引用。详见 [Elastic Elasticsearch Chart](https://github.com/elastic/helm-charts/tree/main/elasticsearch)。
+
+## 通过 Ingress 暴露服务
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-es ltbah/elasticsearch \
+  --set elasticsearch.ingress.enabled=true \
+  --set elasticsearch.ingress.className=higress \
+  --set elasticsearch.ingress.domainSuffix=example.com
+
+# 使用 Nginx Ingress
+helm install my-es ltbah/elasticsearch \
+  --set elasticsearch.ingress.enabled=true \
+  --set elasticsearch.ingress.className=nginx \
+  --set elasticsearch.ingress.host=es.example.com
+```

@@ -108,11 +108,9 @@ service:
 ingress:
   enabled: false
   className: ""
+  domainSuffix: ""
+  host: ""
   annotations: {}
-  hosts: []
-  #   - host: powerjob.example.com
-  #     paths:
-  #       - path: /
   tls: []
 
 ## 资源配置

@@ -67,6 +67,9 @@ helm install my-kafka ltbah/kafka \
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
+| `kafka.image.repository` | 镜像仓库地址，空值使用上游默认 | `""` |
+| `kafka.image.tag` | 镜像标签，空值使用上游默认（跟随 appVersion） | `""` |
+| `kafka.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
 | `kafka.kraft.enabled` | 启用 KRaft 模式（无需 ZooKeeper） | `true` |
 | `kafka.listeners.client.protocol` | 客户端监听协议 | `PLAINTEXT` |
 | `kafka.listeners.interbroker.protocol` | Broker 间通信协议 | `PLAINTEXT` |
@@ -102,6 +105,13 @@ helm install my-kafka ltbah/kafka \
 | `kafka.metrics.jmx.enabled` | 启用 JMX 指标采集 | `false` |
 | `kafka.tls.enabled` | 启用 TLS 加密 | `false` |
 | `kafka.tls.certificatesSecret` | TLS 证书 Secret 名称 | `""` |
+| `kafka.ingress.enabled` | 是否启用 Ingress | `false` |
+| `kafka.ingress.className` | Ingress 类名，使用 Higress 时设为 "higress" | `"higress"` |
+| `kafka.ingress.domainSuffix` | 域名后缀，最终域名格式: {release-name}-{service}.{domainSuffix} | `""` |
+| `kafka.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `kafka.ingress.tls.enabled` | 是否启用 TLS | `false` |
+| `kafka.ingress.tls.secretName` | TLS 证书 Secret 名称 | `""` |
+| `kafka.ingress.annotations` | Ingress 注解 | `{}` |
 | `kafka.extraConfig` | 额外 Kafka 配置 | `""` |
 | `kafka.logPersistence.enabled` | 日志持久化 | `false` |
 | `kafka.logPersistence.size` | 日志存储大小 | `8Gi` |
@@ -165,6 +175,22 @@ helm install my-kafka ltbah/kafka \
 ```
 
 3 Controller + 3 Broker 分离部署，SSD 存储、TLS 加密、JMX + Exporter 监控全开，Pod 反亲和保证高可用。
+
+### 通过 Higress 网关暴露服务
+
+```bash
+# 通过 Higress 网关暴露服务
+helm install my-kafka ltbah/kafka \
+  --set kafka.ingress.enabled=true \
+  --set kafka.ingress.className=higress \
+  --set kafka.ingress.domainSuffix=example.com
+```
+
+如需 TLS：
+```bash
+  --set kafka.ingress.tls.enabled=true \
+  --set kafka.ingress.tls.secretName=kafka-tls
+```
 
 ## 更多配置
 

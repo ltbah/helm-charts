@@ -2,6 +2,22 @@
 
 Wrapper Chart for [MinIO Operator](https://min.io/docs/minio/kubernetes/upstream/)，提供对象存储服务的默认配置。
 
+## 使用示例
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-minio ltbah/minio \
+  --set tenant.secrets.accessKey=youraccesskey \
+  --set tenant.secrets.secretKey=yoursecretkey \
+  --set minio.ingress.enabled=true \
+  --set minio.ingress.className=higress \
+  --set minio.ingress.domainSuffix=example.com
+
+# 指定镜像版本
+helm install my-minio ltbah/minio \
+  --set minio.image.tag=latest
+```
+
 ---
 
 ## 最简安装
@@ -80,6 +96,26 @@ helm install my-minio ltbah/minio \
 
 ## 参数列表
 
+### 镜像配置
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `minio.image.repository` | `""` | 镜像仓库 |
+| `minio.image.tag` | `""` | 镜像标签 |
+| `minio.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
+
+### Ingress 配置
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `minio.ingress.enabled` | `false` | 启用 Ingress |
+| `minio.ingress.className` | `""` | Ingress 类名 (higress, nginx 等) |
+| `minio.ingress.domainSuffix` | `""` | 域名后缀 |
+| `minio.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `minio.ingress.tls.enabled` | `false` | 启用 TLS |
+| `minio.ingress.tls.secretName` | `""` | TLS Secret 名称 |
+| `minio.ingress.annotations` | `{}` | Ingress 注解 |
+
 ### Operator
 
 | 参数 | 默认值 | 说明 |
@@ -119,10 +155,6 @@ helm install my-minio ltbah/minio \
 | `tenant.resources.requests.memory` | `256Mi` | 内存请求 |
 | `tenant.resources.limits.cpu` | `"1"` | CPU 限制 |
 | `tenant.resources.limits.memory` | `1Gi` | 内存限制 |
-| `tenant.ingress.enabled` | `false` | 是否启用 Ingress |
-| `tenant.ingress.annotations` | `{}` | Ingress 标注 |
-| `tenant.ingress.hosts` | `[]` | Ingress 域名规则 |
-| `tenant.ingress.tls` | `[]` | Ingress TLS 配置 |
 
 ---
 

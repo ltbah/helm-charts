@@ -122,6 +122,10 @@ helm install my-pg ltbah/postgresql \
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
+| **Image** | | |
+| `postgresql.image.repository` | 镜像仓库地址，空值使用上游默认 | `""` |
+| `postgresql.image.tag` | 镜像标签，空值使用上游默认（跟随 appVersion） | `""` |
+| `postgresql.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
 | **Architecture** | | |
 | `postgresql.architecture` | 部署架构：`standalone` 或 `replication` | `standalone` |
 | **Auth** | | |
@@ -212,6 +216,14 @@ helm install my-pg ltbah/postgresql \
 | **TLS** | | |
 | `postgresql.tls.enabled` | 启用 TLS 加密连接 | `false` |
 | `postgresql.tls.certificatesSecret` | TLS 证书 Secret 名称 | `""` |
+| **Ingress / Higress 网关** | | |
+| `postgresql.ingress.enabled` | 是否启用 Ingress | `false` |
+| `postgresql.ingress.className` | Ingress 类名，使用 Higress 时设为 "higress" | `"higress"` |
+| `postgresql.ingress.domainSuffix` | 域名后缀，最终域名格式: {release-name}-{service}.{domainSuffix} | `""` |
+| `postgresql.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `postgresql.ingress.tls.enabled` | 是否启用 TLS | `false` |
+| `postgresql.ingress.tls.secretName` | TLS 证书 Secret 名称 | `""` |
+| `postgresql.ingress.annotations` | Ingress 注解 | `{}` |
 | **Network Policy** | | |
 | `postgresql.networkPolicy.enabled` | 启用 NetworkPolicy | `false` |
 | **Volume Permissions** | | |
@@ -289,6 +301,24 @@ helm install pg-prod ltbah/postgresql \
 - **安全加固**: 启用 containerSecurityContext / podSecurityContext / networkPolicy / TLS
 - **监控**: 启用 metrics 以接入 Prometheus
 - **启动探针**: 启用 startupProbe 以适应大数据量场景的慢启动
+
+### 通过 Higress 网关暴露服务
+
+```bash
+# 通过 Higress 网关暴露服务
+helm install my-postgresql ltbah/postgresql \
+  --set postgresql.auth.postgresPassword=yourpassword \
+  --set postgresql.auth.password=yourpassword \
+  --set postgresql.ingress.enabled=true \
+  --set postgresql.ingress.className=higress \
+  --set postgresql.ingress.domainSuffix=example.com
+```
+
+如需 TLS：
+```bash
+  --set postgresql.ingress.tls.enabled=true \
+  --set postgresql.ingress.tls.secretName=postgresql-tls
+```
 
 ---
 

@@ -2,6 +2,21 @@
 
 Wrapper Chart for [Prometheus Community Helm Chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus)，提供监控告警的默认配置。
 
+## 使用示例
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-prometheus ltbah/prometheus \
+  --set prometheus.server.retention="30d" \
+  --set prometheus.ingress.enabled=true \
+  --set prometheus.ingress.className=higress \
+  --set prometheus.ingress.domainSuffix=example.com
+
+# 指定镜像版本
+helm install my-prometheus ltbah/prometheus \
+  --set prometheus.image.tag=2.52.0
+```
+
 ## 最简安装
 
 ```bash
@@ -42,6 +57,26 @@ helm install my-prometheus ltbah/prometheus -f my-values.yaml
 本 Chart 无强制必填参数，所有参数均有合理默认值，开箱即用。
 
 ## 参数列表
+
+### 镜像配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `prometheus.image.repository` | 镜像仓库 | `""` |
+| `prometheus.image.tag` | 镜像标签 | `""` |
+| `prometheus.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
+
+### Ingress 配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `prometheus.ingress.enabled` | 启用 Ingress | `false` |
+| `prometheus.ingress.className` | Ingress 类名 (higress, nginx 等) | `""` |
+| `prometheus.ingress.domainSuffix` | 域名后缀 | `""` |
+| `prometheus.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `prometheus.ingress.tls.enabled` | 启用 TLS | `false` |
+| `prometheus.ingress.tls.secretName` | TLS Secret 名称 | `""` |
+| `prometheus.ingress.annotations` | Ingress 注解 | `{}` |
 
 ### Server
 

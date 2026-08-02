@@ -1,4 +1,10 @@
 kafka:
+  ## 镜像配置
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: IfNotPresent
+
   ## KRaft 模式（无需 ZooKeeper，推荐开启）
   kraft:
     enabled: true
@@ -56,6 +62,24 @@ kafka:
       client: 9092
       interbroker: 9093
       controller: 9094
+
+  ## Ingress 配置（支持 Higress 网关）
+  ingress:
+    ## 是否启用 Ingress
+    enabled: false
+    ## Ingress 类名，使用 Higress 时设为 "higress"
+    className: "higress"
+    ## 域名后缀，部署时通过 --set 设置，如 --set kafka.ingress.domainSuffix=example.com
+    ## 最终域名格式: {release-name}-{service}.{domainSuffix}
+    domainSuffix: ""
+    ## 自定义域名（优先级高于 domainSuffix，设置后忽略 domainSuffix）
+    host: ""
+    ## TLS 配置
+    tls:
+      enabled: false
+      secretName: ""
+    ## Ingress 注解
+    annotations: {}
 
   ## Kafka Exporter 指标监控
   metrics:

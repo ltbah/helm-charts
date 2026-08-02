@@ -1,4 +1,18 @@
 zipkin:
+  ## Ingress 配置
+  ingress:
+    enabled: false
+    ## Ingress 类名，可选: higress, nginx 等
+    className: ""
+    ## 域名后缀，如 --set zipkin.ingress.domainSuffix=example.com
+    domainSuffix: ""
+    ## 自定义域名（优先级高于 domainSuffix）
+    host: ""
+    tls:
+      enabled: false
+      secretName: ""
+    annotations: {}
+
   ## Zipkin 副本数
   replicaCount: 1
 
@@ -38,14 +52,6 @@ zipkin:
       username: ""
       ## ES 密码
       password: ""
-
-  ## Ingress 配置
-  ingress:
-    enabled: false
-    annotations: {}
-    hosts: []
-    #   - zipkin.example.com
-    tls: []
 
   ## 节点调度
   nodeSelector: {}

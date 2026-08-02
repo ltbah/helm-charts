@@ -36,6 +36,14 @@ helm install my-mysql ltbah/mysql \
 
 ## 参数列表
 
+### 镜像配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `mysql.image.repository` | 镜像仓库地址，空值使用上游默认 | `""` |
+| `mysql.image.tag` | 镜像标签，空值使用上游默认（跟随 appVersion） | `""` |
+| `mysql.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
+
 ### 全局配置
 
 | 参数 | 说明 | 默认值 |
@@ -102,6 +110,18 @@ helm install my-mysql ltbah/mysql \
 | `mysql.tls.enabled` | 是否启用 TLS | `false` |
 | `mysql.tls.certificatesSecret` | TLS 证书 Secret | `""` |
 
+### Ingress / Higress 网关
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `mysql.ingress.enabled` | 是否启用 Ingress | `false` |
+| `mysql.ingress.className` | Ingress 类名，使用 Higress 时设为 "higress" | `"higress"` |
+| `mysql.ingress.domainSuffix` | 域名后缀，最终域名格式: {release-name}-{service}.{domainSuffix} | `""` |
+| `mysql.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `mysql.ingress.tls.enabled` | 是否启用 TLS | `false` |
+| `mysql.ingress.tls.secretName` | TLS 证书 Secret 名称 | `""` |
+| `mysql.ingress.annotations` | Ingress 注解 | `{}` |
+
 ## 推荐配置
 
 ### 测试环境
@@ -142,6 +162,24 @@ helm install my-mysql ltbah/mysql \
   --set mysql.metrics.enabled=true \
   --set mysql.tls.enabled=true \
   --set mysql.tls.certificatesSecret=mysql-tls-certs
+```
+
+### 通过 Higress 网关暴露服务
+
+```bash
+# 通过 Higress 网关暴露服务
+helm install my-mysql ltbah/mysql \
+  --set mysql.auth.rootPassword=yourpassword \
+  --set mysql.auth.password=yourpassword \
+  --set mysql.ingress.enabled=true \
+  --set mysql.ingress.className=higress \
+  --set mysql.ingress.domainSuffix=example.com
+```
+
+如需 TLS：
+```bash
+  --set mysql.ingress.tls.enabled=true \
+  --set mysql.ingress.tls.secretName=mysql-tls
 ```
 
 ## 更多配置

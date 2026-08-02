@@ -25,10 +25,10 @@ helm install my-kibana ltbah/kibana \
   --set kibana.persistence.size=5Gi \
   --set kibana.persistence.storageClassName=ssd \
   --set kibana.ingress.enabled=true \
-  --set 'kibana.ingress.annotations.cert-manager\.io/cluster-issuer=letsencrypt-prod' \
-  --set 'kibana.ingress.hosts[0].host=kibana.example.com' \
-  --set 'kibana.ingress.tls[0].secretName=kibana-tls' \
-  --set 'kibana.ingress.tls[0].hosts[0]=kibana.example.com' \
+  --set kibana.ingress.className=nginx \
+  --set kibana.ingress.host=kibana.example.com \
+  --set kibana.ingress.tls.enabled=true \
+  --set kibana.ingress.tls.secretName=kibana-tls \
   --set kibana.protocol=https \
   --set kibana.tls.enabled=true \
   --set kibana.tls.certificatesSecret=kibana-certs \
@@ -47,6 +47,9 @@ helm install my-kibana ltbah/kibana \
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `kibana.image.repository` | `""` | 镜像仓库地址，空值使用上游 Chart 默认 |
+| `kibana.image.tag` | `""` | 镜像标签，空值使用上游 Chart 默认版本 |
+| `kibana.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
 | `kibana.elasticsearchHosts` | `https://elasticsearch:9200` | Elasticsearch 连接地址 |
 | `kibana.replicas` | `1` | Kibana 副本数 |
 | `kibana.resources.requests.cpu` | `500m` | CPU 请求 |
@@ -60,9 +63,12 @@ helm install my-kibana ltbah/kibana \
 | `kibana.persistence.size` | `1Gi` | 持久化存储大小 |
 | `kibana.persistence.storageClassName` | `""` | 存储类名 |
 | `kibana.ingress.enabled` | `false` | 是否启用 Ingress |
+| `kibana.ingress.className` | `""` | Ingress 类名 (higress, nginx 等) |
+| `kibana.ingress.domainSuffix` | `""` | 域名后缀，最终域名: {release-name}-{service}.{domainSuffix} |
+| `kibana.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `kibana.ingress.tls.enabled` | `false` | 是否启用 Ingress TLS |
+| `kibana.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
 | `kibana.ingress.annotations` | `{}` | Ingress 注解 |
-| `kibana.ingress.hosts` | `[{"host":"kibana.local","paths":[{"path":"/"}]}]` | Ingress 域名 |
-| `kibana.ingress.tls` | `[]` | Ingress TLS 配置 |
 | `kibana.nodeSelector` | `{}` | 节点选择器 |
 | `kibana.tolerations` | `[]` | 容忍度 |
 | `kibana.affinity` | `{}` | 亲和性 |
@@ -108,14 +114,31 @@ helm install my-kibana ltbah/kibana \
   --set kibana.persistence.size=5Gi \
   --set kibana.persistence.storageClassName=ssd \
   --set kibana.ingress.enabled=true \
-  --set 'kibana.ingress.hosts[0].host=kibana.example.com' \
-  --set 'kibana.ingress.tls[0].secretName=kibana-tls' \
-  --set 'kibana.ingress.tls[0].hosts[0]=kibana.example.com' \
+  --set kibana.ingress.className=nginx \
+  --set kibana.ingress.host=kibana.example.com \
+  --set kibana.ingress.tls.enabled=true \
+  --set kibana.ingress.tls.secretName=kibana-tls \
   --set kibana.protocol=https \
   --set kibana.tls.enabled=true \
   --set kibana.tls.certificatesSecret=kibana-certs \
   --set kibana.securityContext.runAsNonRoot=true \
   --set kibana.fsGroup=1000
+```
+
+## 通过 Ingress 暴露服务
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-kibana ltbah/kibana \
+  --set kibana.ingress.enabled=true \
+  --set kibana.ingress.className=higress \
+  --set kibana.ingress.domainSuffix=example.com
+
+# 使用 Nginx Ingress
+helm install my-kibana ltbah/kibana \
+  --set kibana.ingress.enabled=true \
+  --set kibana.ingress.className=nginx \
+  --set kibana.ingress.host=kibana.example.com
 ```
 
 ## 更多配置

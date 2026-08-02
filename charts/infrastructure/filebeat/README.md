@@ -39,8 +39,8 @@ helm install my-filebeat ltbah/filebeat \
   --set 'filebeat.service.ports[0].name=http' \
   --set 'filebeat.service.ports[0].port=5066' \
   --set filebeat.ingress.enabled=true \
-  --set 'filebeat.ingress.hosts[0].host=filebeat.example.com' \
-  --set 'filebeat.ingress.hosts[0].paths[0].path=/' \
+  --set filebeat.ingress.className=nginx \
+  --set filebeat.ingress.host=filebeat.example.com \
   --set 'filebeat.extraEnvs[0].name=LOG_LEVEL' \
   --set 'filebeat.extraEnvs[0].value=info'
 ```
@@ -55,6 +55,9 @@ helm install my-filebeat ltbah/filebeat \
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `filebeat.image.repository` | `""` | 镜像仓库地址，空值使用上游 Chart 默认 |
+| `filebeat.image.tag` | `""` | 镜像标签，空值使用上游 Chart 默认版本 |
+| `filebeat.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
 | `filebeat.filebeatConfig` | `{}` | Filebeat 配置 (filebeat.yml) |
 | `filebeat.resources.requests.cpu` | `100m` | CPU 请求 |
 | `filebeat.resources.requests.memory` | `200Mi` | 内存请求 |
@@ -72,7 +75,12 @@ helm install my-filebeat ltbah/filebeat \
 | `filebeat.service.type` | `ClusterIP` | Service 类型 |
 | `filebeat.service.ports` | `[{"name":"http","port":5066}]` | Service 端口列表 |
 | `filebeat.ingress.enabled` | `false` | 是否启用 Ingress |
-| `filebeat.ingress.hosts` | `[]` | Ingress 域名 |
+| `filebeat.ingress.className` | `""` | Ingress 类名 (higress, nginx 等) |
+| `filebeat.ingress.domainSuffix` | `""` | 域名后缀，最终域名: {release-name}-{service}.{domainSuffix} |
+| `filebeat.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `filebeat.ingress.tls.enabled` | `false` | 是否启用 Ingress TLS |
+| `filebeat.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
+| `filebeat.ingress.annotations` | `{}` | Ingress 注解 |
 
 ## 测试环境推荐配置
 
@@ -103,6 +111,22 @@ helm install my-filebeat ltbah/filebeat \
   --set filebeat.tolerations[0].key=node-role \
   --set filebeat.tolerations[0].operator=Exists \
   --set filebeat.tolerations[0].effect=NoSchedule
+```
+
+## 通过 Ingress 暴露服务
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-filebeat ltbah/filebeat \
+  --set filebeat.ingress.enabled=true \
+  --set filebeat.ingress.className=higress \
+  --set filebeat.ingress.domainSuffix=example.com
+
+# 使用 Nginx Ingress
+helm install my-filebeat ltbah/filebeat \
+  --set filebeat.ingress.enabled=true \
+  --set filebeat.ingress.className=nginx \
+  --set filebeat.ingress.host=filebeat.example.com
 ```
 
 ## 更多配置

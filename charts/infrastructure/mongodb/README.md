@@ -70,6 +70,9 @@ helm install my-mongo ltbah/mongodb -f my-values.yaml
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `mongodb.image.repository` | `""` | 镜像仓库地址，空值使用上游默认 |
+| `mongodb.image.tag` | `""` | 镜像标签，空值使用上游默认（跟随 appVersion） |
+| `mongodb.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
 | `mongodb.architecture` | `standalone` | 架构模式：`standalone` 或 `replicaset` |
 | `mongodb.auth.rootPassword` | `""` | **[必填]** root 用户密码 |
 | `mongodb.auth.database` | `appdb` | 默认创建的数据库名 |
@@ -111,6 +114,13 @@ helm install my-mongo ltbah/mongodb -f my-values.yaml
 | `mongodb.metrics.service.port` | `9216` | Metrics 服务端口 |
 | `mongodb.tls.enabled` | `false` | 是否启用 TLS |
 | `mongodb.tls.certificatesSecret` | `""` | TLS 证书 Secret 名称 |
+| `mongodb.ingress.enabled` | `false` | 是否启用 Ingress |
+| `mongodb.ingress.className` | `"higress"` | Ingress 类名，使用 Higress 时设为 "higress" |
+| `mongodb.ingress.domainSuffix` | `""` | 域名后缀，最终域名格式: {release-name}-{service}.{domainSuffix} |
+| `mongodb.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `mongodb.ingress.tls.enabled` | `false` | 是否启用 TLS |
+| `mongodb.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
+| `mongodb.ingress.annotations` | `{}` | Ingress 注解 |
 | `mongodb.arbiter.enabled` | `false` | 是否启用仲裁节点（仅 replicaset） |
 | `mongodb.hidden.enabled` | `false` | 是否启用隐藏节点（仅 replicaset） |
 | `mongodb.hidden.persistence.enabled` | `true` | 隐藏节点持久化 |
@@ -199,6 +209,24 @@ mongodb:
     enabled: false
   volumePermissions:
     enabled: false
+```
+
+### 通过 Higress 网关暴露服务
+
+```bash
+# 通过 Higress 网关暴露服务
+helm install my-mongodb ltbah/mongodb \
+  --set mongodb.auth.rootPassword=yourpassword \
+  --set mongodb.auth.password=yourpassword \
+  --set mongodb.ingress.enabled=true \
+  --set mongodb.ingress.className=higress \
+  --set mongodb.ingress.domainSuffix=example.com
+```
+
+如需 TLS：
+```bash
+  --set mongodb.ingress.tls.enabled=true \
+  --set mongodb.ingress.tls.secretName=mongodb-tls
 ```
 
 ## 更多配置

@@ -1,4 +1,10 @@
 kibana:
+  ## 镜像配置
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: IfNotPresent
+
   # -- Elasticsearch hosts (required when no built-in ES)
   elasticsearchHosts: "https://elasticsearch:9200"
 
@@ -26,20 +32,23 @@ kibana:
     size: 1Gi
     storageClassName: ""
 
-  # -- Ingress configuration
+  ## Ingress 配置
   ingress:
+    ## 是否启用 Ingress
     enabled: false
+    ## Ingress 类名，可选: higress, nginx 等，根据集群 Ingress Controller 选择
+    className: ""
+    ## 域名后缀，部署时设置，如 --set kibana.ingress.domainSuffix=example.com
+    ## 最终域名格式: {release-name}-{service}.{domainSuffix}
+    domainSuffix: ""
+    ## 自定义域名（优先级高于 domainSuffix）
+    host: ""
+    ## TLS 配置
+    tls:
+      enabled: false
+      secretName: ""
+    ## Ingress 注解
     annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # cert-manager.io/cluster-issuer: letsencrypt-prod
-    hosts:
-      - host: kibana.local
-        paths:
-          - path: /
-    tls: []
-    #  - secretName: kibana-tls
-    #    hosts:
-    #      - kibana.local
 
   # -- Node selector for pod assignment
   nodeSelector: {}

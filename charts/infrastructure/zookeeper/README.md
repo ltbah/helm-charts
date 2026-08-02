@@ -63,6 +63,9 @@ helm install my-zookeeper ltbah/zookeeper \
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `zookeeper.image.repository` | `""` | 镜像仓库地址，空值使用上游默认 |
+| `zookeeper.image.tag` | `""` | 镜像标签，空值使用上游默认（跟随 appVersion） |
+| `zookeeper.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
 | `zookeeper.replicaCount` | `3` | 副本数，生产环境建议 ≥ 3 且为奇数 |
 | `zookeeper.auth.enabled` | `false` | 是否启用认证 |
 | `zookeeper.auth.clientUser` | `""` | 客户端认证用户名 |
@@ -103,6 +106,13 @@ helm install my-zookeeper ltbah/zookeeper \
 | `zookeeper.metrics.service.port` | `9141` | Metrics 服务端口 |
 | `zookeeper.tls.enabled` | `false` | 是否启用 TLS 加密 |
 | `zookeeper.tls.certificatesSecret` | `""` | 包含证书的 Secret 名称 |
+| `zookeeper.ingress.enabled` | `false` | 是否启用 Ingress |
+| `zookeeper.ingress.className` | `"higress"` | Ingress 类名，使用 Higress 时设为 "higress" |
+| `zookeeper.ingress.domainSuffix` | `""` | 域名后缀，最终域名格式: {release-name}-{service}.{domainSuffix} |
+| `zookeeper.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `zookeeper.ingress.tls.enabled` | `false` | 是否启用 TLS |
+| `zookeeper.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
+| `zookeeper.ingress.annotations` | `{}` | Ingress 注解 |
 | `zookeeper.networkPolicy.enabled` | `false` | 是否启用 NetworkPolicy |
 | `zookeeper.volumePermissions.enabled` | `false` | 是否用 initContainer 修改卷权限 |
 | `zookeeper.logLevel` | `"INFO"` | 日志级别 (INFO / WARN / ERROR / DEBUG) |
@@ -147,4 +157,20 @@ helm install my-zookeeper ltbah/zookeeper \
   --set zookeeper.networkPolicy.enabled=true \
   --set zookeeper.volumePermissions.enabled=true \
   --set zookeeper.logLevel=INFO
+```
+
+### 通过 Higress 网关暴露服务
+
+```bash
+# 通过 Higress 网关暴露服务
+helm install my-zookeeper ltbah/zookeeper \
+  --set zookeeper.ingress.enabled=true \
+  --set zookeeper.ingress.className=higress \
+  --set zookeeper.ingress.domainSuffix=example.com
+```
+
+如需 TLS：
+```bash
+  --set zookeeper.ingress.tls.enabled=true \
+  --set zookeeper.ingress.tls.secretName=zookeeper-tls
 ```

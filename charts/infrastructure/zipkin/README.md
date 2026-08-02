@@ -2,6 +2,20 @@
 
 Wrapper Chart for [Zipkin](https://github.com/openzipkin/zipkin-helm)，提供分布式追踪的默认配置。
 
+## 使用示例
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-zipkin ltbah/zipkin \
+  --set zipkin.ingress.enabled=true \
+  --set zipkin.ingress.className=higress \
+  --set zipkin.ingress.domainSuffix=example.com
+
+# 指定镜像版本
+helm install my-zipkin ltbah/zipkin \
+  --set zipkin.image.tag=3.4.0
+```
+
 ## 快速开始
 
 ```bash
@@ -31,14 +45,31 @@ helm install my-zipkin ltbah/zipkin \
 
 ## 参数列表
 
+### 镜像配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `zipkin.image.repository` | 镜像仓库 | `openzipkin/zipkin-slim` |
+| `zipkin.image.tag` | 镜像标签 | `""` |
+| `zipkin.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
+
+### Ingress 配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `zipkin.ingress.enabled` | 启用 Ingress | `false` |
+| `zipkin.ingress.className` | Ingress 类名 (higress, nginx 等) | `""` |
+| `zipkin.ingress.domainSuffix` | 域名后缀 | `""` |
+| `zipkin.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `zipkin.ingress.tls.enabled` | 启用 TLS | `false` |
+| `zipkin.ingress.tls.secretName` | TLS Secret 名称 | `""` |
+| `zipkin.ingress.annotations` | Ingress 注解 | `{}` |
+
 ### 核心配置
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `zipkin.replicaCount` | 副本数 | `1` |
-| `zipkin.image.repository` | 镜像仓库 | `openzipkin/zipkin-slim` |
-| `zipkin.image.tag` | 镜像标签 | `""` |
-| `zipkin.image.pullPolicy` | 拉取策略 | `IfNotPresent` |
 | `zipkin.resources` | 资源配置 | `{}` |
 | `zipkin.service.type` | 服务类型 | `ClusterIP` |
 | `zipkin.service.port` | 服务端口 | `9411` |
@@ -53,14 +84,6 @@ helm install my-zipkin ltbah/zipkin \
 | `zipkin.storage.elasticsearch.indexReplicas` | ES 索引副本数 | `1` |
 | `zipkin.storage.elasticsearch.username` | ES 用户名 | `""` |
 | `zipkin.storage.elasticsearch.password` | ES 密码 | `""` |
-
-### 网络配置
-
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
-| `zipkin.ingress.enabled` | 启用 Ingress | `false` |
-| `zipkin.ingress.hosts` | Ingress 域名 | `[]` |
-| `zipkin.ingress.tls` | TLS 配置 | `[]` |
 
 ### 调度与安全
 

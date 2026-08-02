@@ -2,6 +2,21 @@
 
 Wrapper Chart for [Apache SkyWalking](https://github.com/apache/skywalking-helm)，提供分布式追踪和 APM 的默认配置。
 
+## 使用示例
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-skywalking ltbah/skywalking \
+  --set skywalking.oap.replicas=2 \
+  --set skywalking.ingress.enabled=true \
+  --set skywalking.ingress.className=higress \
+  --set skywalking.ingress.domainSuffix=example.com
+
+# 指定镜像版本
+helm install my-skywalking ltbah/skywalking \
+  --set skywalking.image.tag=10.0.0
+```
+
 ## 快速开始
 
 ```bash
@@ -31,6 +46,26 @@ helm install my-skywalking ltbah/skywalking \
 > ⚠️ 生产环境必须配置外部 Elasticsearch，内置 ES 仅用于测试。
 
 ## 参数列表
+
+### 镜像配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `skywalking.image.repository` | 镜像仓库 | `""` |
+| `skywalking.image.tag` | 镜像标签 | `""` |
+| `skywalking.image.pullPolicy` | 镜像拉取策略 | `IfNotPresent` |
+
+### Ingress 配置
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `skywalking.ingress.enabled` | 启用 Ingress | `false` |
+| `skywalking.ingress.className` | Ingress 类名 (higress, nginx 等) | `""` |
+| `skywalking.ingress.domainSuffix` | 域名后缀 | `""` |
+| `skywalking.ingress.host` | 自定义域名（优先级高于 domainSuffix） | `""` |
+| `skywalking.ingress.tls.enabled` | 启用 TLS | `false` |
+| `skywalking.ingress.tls.secretName` | TLS Secret 名称 | `""` |
+| `skywalking.ingress.annotations` | Ingress 注解 | `{}` |
 
 ### OAP Server 配置
 

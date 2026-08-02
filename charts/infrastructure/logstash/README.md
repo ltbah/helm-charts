@@ -30,11 +30,10 @@ helm install my-logstash ltbah/logstash \
   --set 'logstash.service.ports[1].port=5044' \
   --set logstash.lsJavaOpts="-Xms2g -Xmx2g" \
   --set logstash.ingress.enabled=true \
-  --set 'logstash.ingress.hosts[0].host=logstash.example.com' \
-  --set 'logstash.ingress.hosts[0].paths[0].path=/' \
-  --set 'logstash.ingress.hosts[0].paths[0].port=8080' \
-  --set 'logstash.ingress.tls[0].secretName=logstash-tls' \
-  --set 'logstash.ingress.tls[0].hosts[0]=logstash.example.com' \
+  --set logstash.ingress.className=nginx \
+  --set logstash.ingress.host=logstash.example.com \
+  --set logstash.ingress.tls.enabled=true \
+  --set logstash.ingress.tls.secretName=logstash-tls \
   --set-file logstash.logstashPipeline.logstash\.conf=pipeline.conf
 ```
 
@@ -48,6 +47,9 @@ helm install my-logstash ltbah/logstash \
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
+| `logstash.image.repository` | `""` | 镜像仓库地址，空值使用上游 Chart 默认 |
+| `logstash.image.tag` | `""` | 镜像标签，空值使用上游 Chart 默认版本 |
+| `logstash.image.pullPolicy` | `IfNotPresent` | 镜像拉取策略 |
 | `logstash.elasticsearchHosts` | `https://elasticsearch:9200` | Elasticsearch 连接地址 |
 | `logstash.replicas` | `2` | Logstash 副本数 |
 | `logstash.heapSize` | `1g` | JVM 堆内存大小 |
@@ -69,8 +71,12 @@ helm install my-logstash ltbah/logstash \
 | `logstash.readinessProbe` | (见 values) | 就绪探针配置 |
 | `logstash.livenessProbe` | (见 values) | 存活探针配置 |
 | `logstash.ingress.enabled` | `false` | 是否启用 Ingress |
-| `logstash.ingress.hosts` | `[]` | Ingress 域名 |
-| `logstash.ingress.tls` | `[]` | Ingress TLS 配置 |
+| `logstash.ingress.className` | `""` | Ingress 类名 (higress, nginx 等) |
+| `logstash.ingress.domainSuffix` | `""` | 域名后缀，最终域名: {release-name}-{service}.{domainSuffix} |
+| `logstash.ingress.host` | `""` | 自定义域名（优先级高于 domainSuffix） |
+| `logstash.ingress.tls.enabled` | `false` | 是否启用 Ingress TLS |
+| `logstash.ingress.tls.secretName` | `""` | TLS 证书 Secret 名称 |
+| `logstash.ingress.annotations` | `{}` | Ingress 注解 |
 
 ## 测试环境推荐配置
 
@@ -103,9 +109,26 @@ helm install my-logstash ltbah/logstash \
   --set logstash.persistence.storageClassName=ssd \
   --set logstash.lsJavaOpts="-Xms4g -Xmx4g" \
   --set logstash.ingress.enabled=true \
-  --set 'logstash.ingress.hosts[0].host=logstash.example.com' \
-  --set 'logstash.ingress.tls[0].secretName=logstash-tls' \
-  --set 'logstash.ingress.tls[0].hosts[0]=logstash.example.com'
+  --set logstash.ingress.className=nginx \
+  --set logstash.ingress.host=logstash.example.com \
+  --set logstash.ingress.tls.enabled=true \
+  --set logstash.ingress.tls.secretName=logstash-tls
+```
+
+## 通过 Ingress 暴露服务
+
+```bash
+# 通过 Ingress 暴露服务（支持 Higress / Nginx 等）
+helm install my-logstash ltbah/logstash \
+  --set logstash.ingress.enabled=true \
+  --set logstash.ingress.className=higress \
+  --set logstash.ingress.domainSuffix=example.com
+
+# 使用 Nginx Ingress
+helm install my-logstash ltbah/logstash \
+  --set logstash.ingress.enabled=true \
+  --set logstash.ingress.className=nginx \
+  --set logstash.ingress.host=logstash.example.com
 ```
 
 ## 更多配置

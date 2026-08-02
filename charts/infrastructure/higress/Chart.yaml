@@ -7,4 +7,4 @@ appVersion: "2.0"
 dependencies:
   - name: higress
     version: "2.x.x"
-    repository: https://higress.io/charts
+    repository: https://higress.io/helm-charts

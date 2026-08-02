@@ -14,6 +14,6 @@ repos:
   - name: zipkin
     url: https://zipkin.io/zipkin-helm
   - name: higress
-    url: https://higress.io/charts
+    url: https://higress.io/helm-charts
   - name: minio
     url: https://minio.github.io/operator
