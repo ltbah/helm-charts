@@ -1,0 +1,22 @@
+FileBrowser Quantum has been deployed!
+
+Get the application URL:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "filebrowser.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:{{ .Values.service.port }} to use FileBrowser"
+  kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME {{ .Values.service.port }}:{{ .Values.config.server.port }}
+
+Default login: admin / admin
+
+{{- if .Values.ingress.enabled }}
+
+Ingress is enabled. Access via:
+  https://{{ include "filebrowser.ingressHost" . }}
+{{- end }}
+
+{{- if .Values.persistence.srv.enabled }}
+
+Persistent volume mounted at /srv for file storage.
+{{- else if .Values.persistence.srv.existingClaim }}
+
+Existing PVC "{{ .Values.persistence.srv.existingClaim }}" mounted at /srv.
+{{- end }}

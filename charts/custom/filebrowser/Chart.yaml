@@ -1,0 +1,13 @@
+apiVersion: v2
+name: filebrowser
+description: FileBrowser Quantum - web-based file manager
+type: application
+version: 1.0.0
+appVersion: "2.32.0"
+keywords:
+  - filebrowser
+  - file-manager
+  - storage
+home: https://github.com/gtsteffaniak/filebrowser
+maintainers:
+  - name: ltbah

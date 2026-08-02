@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "filebrowser.fullname" . }}-config
+  labels:
+    {{- include "filebrowser.labels" . | nindent 4 }}
+data:
+  config.yaml: |
+    server:
+      port: {{ .Values.config.server.port }}
+      baseURL: {{ .Values.config.server.baseURL | quote }}
+      logging:
+        {{- range .Values.config.server.logging }}
+        - levels: {{ .levels | quote }}
+        {{- end }}
+      sources:
+        {{- range .Values.config.server.sources }}
+        - path: {{ .path | quote }}
+        {{- end }}
+    auth:
+      methods:
+        password:
+          enabled: {{ .Values.config.auth.methods.password.enabled }}
+          minLength: {{ .Values.config.auth.methods.password.minLength }}
+          signup: {{ .Values.config.auth.methods.password.signup }}
+        passkey:
+          enabled: {{ .Values.config.auth.methods.passkey.enabled }}
+    userDefaults:
+      sidebar:
+        disableQuickToggles: {{ .Values.config.userDefaults.sidebar.disableQuickToggles }}
+        hideFileActions: {{ .Values.config.userDefaults.sidebar.hideFileActions }}
+        disableHideOnPreview: {{ .Values.config.userDefaults.sidebar.disableHideOnPreview }}
+        sticky: {{ .Values.config.userDefaults.sidebar.sticky }}
+        hideFiles: {{ .Values.config.userDefaults.sidebar.hideFiles }}
+        showTools: {{ .Values.config.userDefaults.sidebar.showTools }}
+      listing:
+        deleteWithoutConfirming: {{ .Values.config.userDefaults.listing.deleteWithoutConfirming }}
+        dateFormat: {{ .Values.config.userDefaults.listing.dateFormat }}
+        showHidden: {{ .Values.config.userDefaults.listing.showHidden }}
+        quickDownload: {{ .Values.config.userDefaults.listing.quickDownload }}
+        showSelectMultiple: {{ .Values.config.userDefaults.listing.showSelectMultiple }}
+        singleClick: {{ .Values.config.userDefaults.listing.singleClick }}
+        hideFileExt: {{ .Values.config.userDefaults.listing.hideFileExt | quote }}
+        showCopyPath: {{ .Values.config.userDefaults.listing.showCopyPath }}
+        deleteAfterArchive: {{ .Values.config.userDefaults.listing.deleteAfterArchive }}
+        viewMode: {{ .Values.config.userDefaults.listing.viewMode | quote }}
+        gallerySize: {{ .Values.config.userDefaults.listing.gallerySize }}
+      preview:
+        image: {{ .Values.config.userDefaults.preview.image }}
+        video: {{ .Values.config.userDefaults.preview.video }}
+        audio: {{ .Values.config.userDefaults.preview.audio }}
+        motionVideoPreview: {{ .Values.config.userDefaults.preview.motionVideoPreview }}
+        office: {{ .Values.config.userDefaults.preview.office }}
+        popup: {{ .Values.config.userDefaults.preview.popup }}
+        disablePreviewExt: {{ .Values.config.userDefaults.preview.disablePreviewExt | quote }}
+        highQuality: {{ .Values.config.userDefaults.preview.highQuality }}
+        folder: {{ .Values.config.userDefaults.preview.folder }}
+        models: {{ .Values.config.userDefaults.preview.models }}
+      fileViewer:
+        editorQuickSave: {{ .Values.config.userDefaults.fileViewer.editorQuickSave }}
+        autoplayMedia: {{ .Values.config.userDefaults.fileViewer.autoplayMedia }}
+        disableViewingExt: {{ .Values.config.userDefaults.fileViewer.disableViewingExt | quote }}
+        disableOnlyOfficeExt: {{ .Values.config.userDefaults.fileViewer.disableOnlyOfficeExt | quote }}
+        preferEditorForMarkdown: {{ .Values.config.userDefaults.fileViewer.preferEditorForMarkdown }}
+        debugOffice: {{ .Values.config.userDefaults.fileViewer.debugOffice }}
+        defaultMediaPlayer: {{ .Values.config.userDefaults.fileViewer.defaultMediaPlayer }}
+      search:
+        disableOptions: {{ .Values.config.userDefaults.search.disableOptions }}
+      ui:
+        darkMode: {{ .Values.config.userDefaults.ui.darkMode }}
+        themeColor: {{ .Values.config.userDefaults.ui.themeColor | quote }}
+        customTheme: {{ .Values.config.userDefaults.ui.customTheme | quote }}
+        locale: {{ .Values.config.userDefaults.ui.locale | quote }}
+      fileLoading:
+        maxConcurrentUpload: {{ .Values.config.userDefaults.fileLoading.maxConcurrentUpload }}
+        uploadChunkSizeMb: {{ .Values.config.userDefaults.fileLoading.uploadChunkSizeMb }}
+        downloadChunkSizeMb: {{ .Values.config.userDefaults.fileLoading.downloadChunkSizeMb }}
+      account:
+        permissions:
+          api: {{ .Values.config.userDefaults.account.permissions.api }}
+          admin: {{ .Values.config.userDefaults.account.permissions.admin }}
+          modify: {{ .Values.config.userDefaults.account.permissions.modify }}
+          share: {{ .Values.config.userDefaults.account.permissions.share }}
+          realtime: {{ .Values.config.userDefaults.account.permissions.realtime }}
+          delete: {{ .Values.config.userDefaults.account.permissions.delete }}
+          create: {{ .Values.config.userDefaults.account.permissions.create }}
+          download: {{ .Values.config.userDefaults.account.permissions.download }}
+        lockPassword: {{ .Values.config.userDefaults.account.lockPassword }}
+        disableSettings: {{ .Values.config.userDefaults.account.disableSettings }}
+        loginMethod: {{ .Values.config.userDefaults.account.loginMethod | quote }}
+        disableUpdateNotifications: {{ .Values.config.userDefaults.account.disableUpdateNotifications }}

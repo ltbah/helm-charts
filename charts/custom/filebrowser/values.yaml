@@ -1,0 +1,168 @@
+## FileBrowser Quantum 配置
+replicaCount: 1
+
+image:
+  repository: gtstef/filebrowser
+  tag: ""
+  pullPolicy: IfNotPresent
+
+## 服务配置
+service:
+  type: ClusterIP
+  port: 80
+
+## Ingress 配置
+ingress:
+  enabled: false
+  ## Ingress 类名，可选: higress, nginx 等
+  className: ""
+  ## 域名后缀
+  domainSuffix: ""
+  ## 自定义域名（优先级高于 domainSuffix）
+  host: ""
+  annotations: {}
+  tls: []
+
+## 资源配置
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+## 持久化配置
+persistence:
+  ## 数据库和配置存储
+  data:
+    enabled: false
+    size: 1Gi
+    storageClassName: ""
+    accessMode: ReadWriteOnce
+  ## 文件浏览的根目录
+  srv:
+    enabled: false
+    size: 10Gi
+    storageClassName: ""
+    accessMode: ReadWriteOnce
+    ## 已有的 PVC 名称
+    existingClaim: ""
+
+## FileBrowser 配置 (config.yaml)
+config:
+  server:
+    port: 80
+    baseURL: "/"
+    logging:
+      - levels: "info|warning|error"
+    sources:
+      - path: "/srv"
+  auth:
+    methods:
+      password:
+        enabled: true
+        minLength: 5
+        signup: false
+      passkey:
+        enabled: false
+  userDefaults:
+    sidebar:
+      disableQuickToggles: false
+      hideFileActions: false
+      disableHideOnPreview: false
+      sticky: true
+      hideFiles: false
+      showTools: true
+    listing:
+      deleteWithoutConfirming: false
+      dateFormat: false
+      showHidden: false
+      quickDownload: false
+      showSelectMultiple: false
+      singleClick: false
+      hideFileExt: ""
+      showCopyPath: false
+      deleteAfterArchive: true
+      viewMode: "normal"
+      gallerySize: 3
+    preview:
+      image: true
+      video: true
+      audio: true
+      motionVideoPreview: true
+      office: true
+      popup: true
+      disablePreviewExt: ""
+      highQuality: true
+      folder: true
+      models: true
+    fileViewer:
+      editorQuickSave: false
+      autoplayMedia: true
+      disableViewingExt: ""
+      disableOnlyOfficeExt: ".md .txt .pdf .html .xml"
+      preferEditorForMarkdown: false
+      debugOffice: false
+      defaultMediaPlayer: false
+    search:
+      disableOptions: false
+    ui:
+      darkMode: true
+      themeColor: "var(--blue)"
+      customTheme: ""
+      locale: "en"
+    fileLoading:
+      maxConcurrentUpload: 10
+      uploadChunkSizeMb: 10
+      downloadChunkSizeMb: 0
+    account:
+      permissions:
+        api: false
+        admin: false
+        modify: false
+        share: false
+        realtime: false
+        delete: false
+        create: false
+        download: true
+      lockPassword: false
+      disableSettings: false
+      loginMethod: "password"
+      disableUpdateNotifications: false
+
+## 额外环境变量
+extraEnv: []
+#  - name: FB_NOAUTH
+#    value: "true"
+
+## 就绪探针
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+## 存活探针
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+
+## Pod 注解
+podAnnotations: {}
+
+## Pod 标签
+podLabels: {}
+
+## 节点选择器
+nodeSelector: {}
+
+## 容忍度
+tolerations: []
+
+## 亲和性
+affinity: {}
