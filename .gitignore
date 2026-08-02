@@ -9,8 +9,9 @@ Thumbs.db
 *.swo
 *~
 
-# Helm
-charts/**/charts/
+# Helm — downloaded dependency archives (not sourced sub-charts)
+charts/infrastructure/**/charts/
+charts/custom/**/charts/
 *.tgz
 Chart.lock
 

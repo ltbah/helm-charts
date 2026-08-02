@@ -41,24 +41,30 @@ jobs:
 
       - name: Update dependencies
         run: |
-          for chart in charts/infrastructure/*/; do
-            if [ -f "${chart}Chart.yaml" ]; then
-              echo "Updating dependencies for ${chart}"
-              helm dependency update "${chart}"
-            fi
+          for category in infrastructure sourced custom; do
+            for chart in charts/${category}/*/; do
+              if [ -f "${chart}Chart.yaml" ]; then
+                echo "Updating dependencies for ${chart}"
+                helm dependency update "${chart}" || exit 1
+              fi
+            done
           done
-          for chart in charts/custom/*/; do
-            if [ -f "${chart}Chart.yaml" ]; then
-              echo "Updating dependencies for ${chart}"
-              helm dependency update "${chart}"
-            fi
-          done
-
-      - name: Run chart-testing lint
-        uses: helm/chart-testing-action@v2
 
       - name: Lint charts
-        run: ct lint --config ct.yaml
+        run: |
+          failed=0
+          for category in infrastructure sourced custom; do
+            for chart in charts/${category}/*/; do
+              if [ -f "${chart}Chart.yaml" ]; then
+                echo "Linting ${chart}"
+                if ! helm lint "${chart}"; then
+                  echo "FAILED: ${chart}"
+                  failed=1
+                fi
+              fi
+            done
+          done
+          exit $failed
 
       - name: Package charts
         run: |
@@ -71,6 +77,10 @@ jobs:
               fi
             done
           done
+
+      - name: Generate index
+        run: |
+          helm repo index packaged/ --url https://ltbah.github.io/helm-charts/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

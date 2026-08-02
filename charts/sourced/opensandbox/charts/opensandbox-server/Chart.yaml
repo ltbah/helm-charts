@@ -13,23 +13,26 @@
 # limitations under the License.
 
 apiVersion: v2
-name: opensandbox
-description: All-in-one Helm chart for deploying OpenSandbox controller and server
+name: opensandbox-server
+description: OpenSandbox Lifecycle API server for sandbox creation and management
 type: application
-version: 0.2.0
-appVersion: "0.2.0"
+version: 0.1.0
+appVersion: "0.1.0"
+# execd bootstrap.sh installed to /opt/opensandbox (flattened from /opt/opensandbox/bin)
 
 keywords:
   - sandbox
   - kubernetes
-  - operator
   - api
   - lifecycle
   - batchsandbox
+  - ingress
+  - gateway
 
 home: https://github.com/opensandbox-group/OpenSandbox
 sources:
-  - https://github.com/opensandbox-group/OpenSandbox/tree/main/kubernetes
+  - https://github.com/opensandbox-group/OpenSandbox/tree/main/server
+  - https://github.com/opensandbox-group/OpenSandbox/tree/main/components/ingress
 
 maintainers:
   - name: OpenSandbox Team
@@ -38,20 +41,7 @@ maintainers:
 # Kubernetes version constraints
 kubeVersion: ">=1.21.1-0"
 
-dependencies:
-  - name: opensandbox-controller
-    version: "0.2.0"
-    repository: "file://charts/opensandbox-controller"
-  - name: opensandbox-server
-    version: "0.1.0"
-    repository: "file://charts/opensandbox-server"
-
 annotations:
   artifacthub.io/category: integration-delivery
   artifacthub.io/license: Apache-2.0
   artifacthub.io/prerelease: "false"
-  artifacthub.io/links: |
-    - name: Documentation
-      url: https://github.com/opensandbox-group/OpenSandbox/blob/main/kubernetes/README.md
-    - name: Support
-      url: https://github.com/opensandbox-group/OpenSandbox/issues
