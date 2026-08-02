@@ -56,15 +56,21 @@ jobs:
           for category in infrastructure sourced custom; do
             for chart in charts/${category}/*/; do
               if [ -f "${chart}Chart.yaml" ]; then
-                echo "Linting ${chart}"
-                if ! helm lint "${chart}"; then
-                  echo "FAILED: ${chart}"
+                echo "========== Linting ${chart} =========="
+                if ! helm lint "${chart}" 2>&1; then
+                  echo "❌ FAILED: ${chart}"
                   failed=1
+                else
+                  echo "✅ PASSED: ${chart}"
                 fi
               fi
             done
           done
-          exit $failed
+          if [ "$failed" -ne 0 ]; then
+            echo "❌ Some charts failed lint"
+            exit 1
+          fi
+          echo "✅ All charts passed lint"
 
       - name: Package charts
         run: |
