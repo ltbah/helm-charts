@@ -1,9 +1,8 @@
 kibana:
-  ## 镜像配置
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
+  ## 镜像配置（上游 Elastic 格式）
+  image: ""
+  imageTag: ""
+  imagePullPolicy: IfNotPresent
 
   # -- Elasticsearch hosts (required when no built-in ES)
   elasticsearchHosts: "https://elasticsearch:9200"
@@ -43,10 +42,8 @@ kibana:
     domainSuffix: ""
     ## 自定义域名（优先级高于 domainSuffix）
     host: ""
-    ## TLS 配置
-    tls:
-      enabled: false
-      secretName: ""
+    ## TLS（数组格式，上游 Elastic 要求）
+    tls: []
     ## Ingress 注解
     annotations: {}
 

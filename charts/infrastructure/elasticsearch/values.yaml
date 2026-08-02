@@ -1,9 +1,8 @@
 elasticsearch:
-  ## 镜像配置
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
+  ## 镜像配置（上游 Elastic 格式）
+  image: ""
+  imageTag: ""
+  imagePullPolicy: IfNotPresent
 
   ## ------------------------------------------------------------------
   ## 集群配置
@@ -19,13 +18,9 @@ elasticsearch:
   masterService: ""
 
   ## ------------------------------------------------------------------
-  ## 节点角色
+  ## 节点角色（数组格式，上游 Elastic 要求）
   ## ------------------------------------------------------------------
-  roles:
-    master: true
-    data: true
-    ingest: true
-    ml: false
+  roles: ["master", "data", "ingest"]
 
   ## ------------------------------------------------------------------
   ## 副本数
@@ -170,10 +165,8 @@ elasticsearch:
     domainSuffix: ""
     ## 自定义域名（优先级高于 domainSuffix）
     host: ""
-    ## TLS 配置
-    tls:
-      enabled: false
-      secretName: ""
+    ## TLS（数组格式，上游 Elastic 要求）
+    tls: []
     ## Ingress 注解
     annotations: {}
 

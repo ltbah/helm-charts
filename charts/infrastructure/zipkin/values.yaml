@@ -6,7 +6,6 @@ zipkin:
     pullPolicy: IfNotPresent
 
   ## Ingress 配置（本仓库统一格式）
-  ## 启用后将自动配置上游 zipkin.ingress
   ingress:
     enabled: false
     ## Ingress 类名，可选: higress, nginx 等
@@ -15,24 +14,12 @@ zipkin:
     domainSuffix: ""
     ## 自定义域名（优先级高于 domainSuffix）
     host: ""
-    tls:
-      enabled: false
-      secretName: ""
+    ## TLS（数组格式，上游 Zipkin 要求）
+    tls: []
+    #  - secretName: zipkin-tls
+    #    hosts:
+    #      - zipkin.example.com
     annotations: {}
-
-  ## 上游 Zipkin 原生 Ingress 配置
-  ## 当 ingress.enabled=true 时，建议通过上方统一格式配置
-  ## 如需更细粒度控制，可直接配置以下字段
-  zipkin:
-    ingress:
-      enabled: false
-      annotations: {}
-      hosts: []
-      #  - zipkin.example.com
-      tls: []
-      #  - secretName: zipkin-tls
-      #    hosts:
-      #      - zipkin.example.com
 
   ## Zipkin 副本数
   replicaCount: 1
