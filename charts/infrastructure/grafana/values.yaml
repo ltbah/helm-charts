@@ -1,6 +1,6 @@
 grafana:
-  ## Grafana 管理员配置
-  adminPassword: "admin"
+  ## 管理员密码 (必填，生产环境务必设置强密码)
+  adminPassword: ""
 
   ## 副本数
   replicas: 1
@@ -9,8 +9,9 @@ grafana:
   persistence:
     enabled: true
     size: 5Gi
+    ## storageClassName: ""  # 使用集群默认 StorageClass
 
-  ## 资源配置
+  ## 资源请求与限制
   resources:
     requests:
       cpu: 100m
@@ -19,10 +20,31 @@ grafana:
       cpu: 500m
       memory: 512Mi
 
-  ## 服务配置
+  ## Service 配置
   service:
     type: ClusterIP
     port: 80
+
+  ## Ingress
+  ingress:
+    enabled: false
+    ## hosts:
+    ##   - grafana.example.com
+    hosts: []
+    ## tls:
+    ##   - secretName: grafana-tls
+    ##     hosts:
+    ##       - grafana.example.com
+    tls: []
+    ## annotations:
+    ##   kubernetes.io/ingress.class: nginx
+    ##   cert-manager.io/cluster-issuer: letsencrypt-prod
+    annotations: {}
+
+  ## 节点调度
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
   ## 数据源配置
   datasources:
@@ -35,7 +57,7 @@ grafana:
           access: proxy
           isDefault: true
 
-  ## Dashboard Provider
+  ## Dashboard Provider 配置
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -48,3 +70,39 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/default
+
+  ## 额外环境变量
+  extraEnvVars: []
+
+  ## Pod 注解与标签
+  podAnnotations: {}
+  podLabels: {}
+
+  ## 健康检查
+  readinessProbe:
+    httpGet:
+      path: /api/health
+      port: 3000
+    initialDelaySeconds: 30
+    timeoutSeconds: 10
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: 3000
+    initialDelaySeconds: 60
+    timeoutSeconds: 10
+
+  ## 安全上下文
+  securityContext: {}
+  fsGroup: 472
+
+  ## SMTP 邮件通知配置
+  smtp:
+    enabled: false
+    host: ""
+    user: ""
+    password: ""
+    from_address: ""
+
+  ## 插件列表 (e.g. grafana-clock-panel, grafana-piechart-panel)
+  plugins: []

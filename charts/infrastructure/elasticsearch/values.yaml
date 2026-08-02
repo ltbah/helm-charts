@@ -1,18 +1,40 @@
 elasticsearch:
+  ## ------------------------------------------------------------------
   ## 集群配置
+  ## ------------------------------------------------------------------
+  ## Elasticsearch 集群名称，同一集群内所有节点必须一致
   clusterName: "elasticsearch"
 
+  ## 节点组名称，用于区分 master / data / ingest 等不同角色组
+  nodeGroup: "master"
+
+  ## Master 服务名称，默认为 <clusterName>-<nodeGroup>
+  ## 多节点组部署时，data/ingest 节点组需指向 master 节点组的服务名
+  masterService: ""
+
+  ## ------------------------------------------------------------------
+  ## 节点角色
+  ## ------------------------------------------------------------------
+  roles:
+    master: true
+    data: true
+    ingest: true
+    ml: false
+
+  ## ------------------------------------------------------------------
   ## 副本数
+  ## ------------------------------------------------------------------
   replicas: 3
 
-  ## 持久化存储
-  volumeClaimTemplate:
-    accessModes: ["ReadWriteOnce"]
-    resources:
-      requests:
-        storage: 30Gi
+  ## ------------------------------------------------------------------
+  ## JVM 堆内存
+  ## ------------------------------------------------------------------
+  ## 建议设置为容器内存的 50%，且不超过 32g
+  esJavaOpts: "-Xms2g -Xmx2g"
 
-  ## 资源配置
+  ## ------------------------------------------------------------------
+  ## 容器资源
+  ## ------------------------------------------------------------------
   resources:
     requests:
       cpu: 500m
@@ -21,19 +43,134 @@ elasticsearch:
       cpu: "2"
       memory: 4Gi
 
-  ## JVM 堆内存
-  esJavaOpts: "-Xms2g -Xmx2g"
+  ## ------------------------------------------------------------------
+  ## 持久化存储
+  ## ------------------------------------------------------------------
+  persistence:
+    enabled: true
+    ## PVC 上的自定义标签
+    labels: {}
+    ## PVC 上的自定义注解
+    annotations: {}
+    volumeClaimTemplate:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 30Gi
+      storageClassName: ""
 
-  ## 服务配置
+  ## ------------------------------------------------------------------
+  ## Service
+  ## ------------------------------------------------------------------
   service:
     type: ClusterIP
     ports:
       http: 9200
       transport: 9300
 
-  ## 安全配置
+  ## ------------------------------------------------------------------
+  ## 节点调度
+  ## ------------------------------------------------------------------
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  ## ------------------------------------------------------------------
+  ## Pod 标注与标签
+  ## ------------------------------------------------------------------
+  podAnnotations: {}
+  podLabels: {}
+
+  ## ------------------------------------------------------------------
+  ## 额外环境变量 (value 以 EnvVar 对象列表形式传入)
+  ## ------------------------------------------------------------------
+  extraEnvs: []
+  #  - name: TZ
+  #    value: "Asia/Shanghai"
+
+  ## ------------------------------------------------------------------
+  ## elasticsearch.yml 自定义配置
+  ## ------------------------------------------------------------------
+  esConfig: {}
+  #  elasticsearch.yml: |
+  #    node.store.allow_mmap: false
+  #    xpack.security.enabled: true
+
+  ## ------------------------------------------------------------------
+  ## Keystore 配置
+  ## ------------------------------------------------------------------
+  ## 引用已存在的 Kubernetes Secret，将其内容加载到 Elasticsearch Keystore
+  keystore: []
+  #  - secretName: elasticsearch-credentials
+
+  ## ------------------------------------------------------------------
+  ## 协议 (http / https)
+  ## ------------------------------------------------------------------
   protocol: https
 
-  ## Keystore 配置
-  keystore:
-    - secretName: elasticsearch-credentials
+  ## ------------------------------------------------------------------
+  ## 安全上下文
+  ## ------------------------------------------------------------------
+  securityContext:
+    capabilities:
+      drop: ["ALL"]
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  ## Pod 级 fsGroup，确保 Elasticsearch 进程对数据目录有写权限
+  fsGroup: 1000
+
+  ## ------------------------------------------------------------------
+  ## 健康检查 — Readiness
+  ## ------------------------------------------------------------------
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 3
+    timeoutSeconds: 5
+
+  ## ------------------------------------------------------------------
+  ## 健康检查 — Liveness
+  ## ------------------------------------------------------------------
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## ------------------------------------------------------------------
+  ## 健康检查 — Startup (慢启动场景)
+  ## ------------------------------------------------------------------
+  startupProbe:
+    enabled: false
+    failureThreshold: 30
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## ------------------------------------------------------------------
+  ## Ingress
+  ## ------------------------------------------------------------------
+  ingress:
+    enabled: false
+    ## annotations 示例:
+    #  kubernetes.io/ingress.class: nginx
+    #  cert-manager.io/cluster-issuer: letsencrypt
+    annotations: {}
+    hosts: []
+    #  - host: es.example.com
+    #    paths:
+    #      - path: /
+    tls: []
+    #  - secretName: es-tls
+    #    hosts:
+    #      - es.example.com
+
+  ## ------------------------------------------------------------------
+  ## Secrets Keystore
+  ## ------------------------------------------------------------------
+  ## 启用后，将自动从 Elasticsearch Keystore 中挂载安全配置
+  secretsKeystoreEnabled: false

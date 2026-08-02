@@ -1,34 +1,166 @@
 mysql:
-  ## MySQL 认证配置
-  auth:
-    rootPassword: ""
-    database: "appdb"
-    username: "appuser"
-    password: ""
+  ## MySQL 架构模式: standalone 或 replication
+  architecture: standalone
 
-  ## 持久化存储
+  ## 认证配置
+  auth:
+    ## 必填: root 用户密码
+    rootPassword: ""
+    ## 必填: 创建的数据库名
+    database: "appdb"
+    ## 必填: 应用用户名
+    username: "appuser"
+    ## 必填: 应用用户密码
+    password: ""
+    ## 复制用户配置（replication 模式下生效）
+    replicationUser: "replicator"
+    replicationPassword: ""
+    ## 是否使用现有 Secret
+    existingSecret: ""
+
+  ## Primary 节点配置
   primary:
+    ## 节点亲和性配置
+    affinity: {}
+    ## 注解
+    annotations: {}
+    ## 额外环境变量
+    extraEnvVars: []
+    ## 额外环境变量 ConfigMap
+    extraEnvVarsCM: ""
+    ## 额外环境变量 Secret
+    extraEnvVarsSecret: ""
+    ## 额外初始化容器
+    initContainers: []
+    ## 额外 sidecar 容器
+    sidecars: []
+    ## 容忍度
+    tolerations: []
+    ## 节点选择器
+    nodeSelector: {}
+    ## 优先级类名
+    priorityClassName: ""
+    ## Pod 标签
+    podLabels: {}
+    ## Pod 注解
+    podAnnotations: {}
+    ## Pod 安全上下文
+    podSecurityContext: {}
+    ## 容器安全上下文
+    containerSecurityContext: {}
+    ## 持久化配置
     persistence:
       enabled: true
+      storageClassName: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      ## 使用现有 PVC
+      existingClaim: ""
+    ## 资源配置
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits: {}
+    ## 服务配置
+    service:
+      type: ClusterIP
+      ports:
+        mysql: 3306
+      annotations: {}
+      clusterIP: ""
+      loadBalancerIP: ""
+      externalTrafficPolicy: ""
+    ## 就绪探针
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 3
+      successThreshold: 1
+    ## 存活探针
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 3
+      successThreshold: 1
+    ## 启动探针
+    startupProbe:
+      enabled: false
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 15
+      successThreshold: 1
+    ## MySQL 配置 (my.cnf)
+    configuration: ""
+    ## 初始化脚本
+    initdbScripts: {}
+    ## 初始化脚本 ConfigMap
+    initdbScriptsConfigMap: ""
+
+  ## Secondary 节点配置（replication 模式下生效）
+  secondary:
+    replicaCount: 1
+    affinity: {}
+    annotations: {}
+    extraEnvVars: []
+    initContainers: []
+    sidecars: []
+    tolerations: []
+    nodeSelector: {}
+    persistence:
+      enabled: true
+      storageClassName: ""
+      accessModes:
+        - ReadWriteOnce
       size: 8Gi
     resources:
       requests:
         cpu: 250m
         memory: 256Mi
-      limits:
-        cpu: "1"
-        memory: 1Gi
+      limits: {}
+    service:
+      type: ClusterIP
+      ports:
+        mysql: 3306
 
-  ## 字符集配置（Java 开发常用 utf8mb4）
-  initdbScripts:
-    charset.sql: |
-      ALTER DATABASE appdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-  ## 服务配置
-  service:
-    type: ClusterIP
-    port: 3306
-
-  ## metrics 监控
+  ## Metrics 配置
   metrics:
+    enabled: false
+    image:
+      repository: bitnami/mysqld-exporter
+      tag: ""
+      pullPolicy: IfNotPresent
+    resources: {}
+    service:
+      type: ClusterIP
+      port: 9104
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.mysql.metrics.service.port }}"
+
+  ## TLS/SSL 配置
+  tls:
+    enabled: false
+    certificatesSecret: ""
+    certFilename: ""
+    certKeyFilename: ""
+    caFilename: ""
+
+  ## NetworkPolicy 配置
+  networkPolicy:
+    enabled: false
+
+  ## VolumePermissions 初始化配置
+  volumePermissions:
+    enabled: false
+
+  ## Sysctl 配置
+  sysctl:
     enabled: false

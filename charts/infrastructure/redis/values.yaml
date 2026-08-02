@@ -1,17 +1,33 @@
 redis:
-  ## Redis 认证配置
-  auth:
-    enabled: true
-    password: ""
-
-  ## 架构模式
+  ## ------------------------------------------------------------------
+  ## Architecture: standalone (单节点) or replication (主从复制)
+  ## ------------------------------------------------------------------
   architecture: standalone
 
-  ## 持久化存储
+  ## ------------------------------------------------------------------
+  ## Authentication
+  ## ------------------------------------------------------------------
+  auth:
+    ## 是否启用认证
+    enabled: true
+    ## [REQUIRED when auth.enabled=true] Redis 密码，启用认证时必须设置
+    password: ""
+    ## 使用已有 Secret 替代内建密码
+    ## Secret 需包含 redis-password key
+    ## 设置后 password 参数将被忽略
+    existingSecret: ""
+
+  ## ------------------------------------------------------------------
+  ## Master 节点配置
+  ## ------------------------------------------------------------------
   master:
+    ## 持久化存储
     persistence:
       enabled: true
       size: 4Gi
+      storageClassName: ""
+
+    ## 容器资源
     resources:
       requests:
         cpu: 100m
@@ -20,19 +36,128 @@ redis:
         cpu: 500m
         memory: 512Mi
 
-  ## 副本配置（sentinel/replication 模式下生效）
+    ## Service
+    service:
+      type: ClusterIP
+      ports:
+        redis: 6379
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## 额外环境变量
+    extraEnvVars: []
+    #  - name: TZ
+    #    value: "Asia/Shanghai"
+
+    ## Pod 标注与标签
+    podAnnotations: {}
+    podLabels: {}
+
+    ## 健康检查 — Readiness
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
+      successThreshold: 1
+
+    ## 健康检查 — Liveness
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
+      successThreshold: 1
+
+  ## ------------------------------------------------------------------
+  ## Replica 副本配置 (仅 architecture=replication 时生效)
+  ## ------------------------------------------------------------------
   replica:
+    ## 副本数
     replicaCount: 2
+
+    ## 持久化存储
     persistence:
       enabled: true
       size: 4Gi
+      storageClassName: ""
 
-  ## 服务配置
-  service:
-    type: ClusterIP
-    ports:
-      redis: 6379
+    ## 容器资源
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
 
-  ## metrics 监控
+    ## Service
+    service:
+      type: ClusterIP
+      ports:
+        redis: 6379
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+  ## ------------------------------------------------------------------
+  ## Sentinel (哨兵模式，与 replication 配合使用)
+  ## ------------------------------------------------------------------
+  sentinel:
+    ## 是否启用 Sentinel
+    enabled: false
+    ## Sentinel 法定人数
+    quorum: 2
+    ## 持久化存储
+    persistence:
+      enabled: true
+      size: 4Gi
+      storageClassName: ""
+    ## 容器资源
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+  ## ------------------------------------------------------------------
+  ## Metrics (Prometheus Exporter)
+  ## ------------------------------------------------------------------
   metrics:
+    enabled: false
+    service:
+      port: 9121
+
+  ## ------------------------------------------------------------------
+  ## TLS
+  ## ------------------------------------------------------------------
+  tls:
+    enabled: false
+    certificatesSecret: ""
+
+  ## ------------------------------------------------------------------
+  ## Network Policy
+  ## ------------------------------------------------------------------
+  networkPolicy:
+    enabled: false
+
+  ## ------------------------------------------------------------------
+  ## Volume Permissions (initContainer 修改卷权限)
+  ## ------------------------------------------------------------------
+  volumePermissions:
+    enabled: false
+
+  ## ------------------------------------------------------------------
+  ## Sysctl (initContainer 调整内核参数，如 vm.overcommit_memory)
+  ## ------------------------------------------------------------------
+  sysctl:
     enabled: false

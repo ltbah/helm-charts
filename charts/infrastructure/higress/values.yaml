@@ -1,32 +1,169 @@
 higress:
-  ## Higress Gateway 配置
+  ## Gateway 配置
   gateway:
+    ## Gateway 副本数
     replicas: 2
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-      limits:
-        cpu: "1"
-        memory: 1Gi
+
+    ## Gateway 资源配置
+    resources: {}
+    #  requests:
+    #    cpu: 200m
+    #    memory: 256Mi
+    #  limits:
+    #    cpu: "1"
+    #    memory: 1Gi
+
+    ## Gateway 服务配置
     service:
       type: LoadBalancer
       ports:
         http: 80
         https: 443
+      loadBalancerIP: ""
+      externalTrafficPolicy: ""
+      annotations: {}
+
+    ## Gateway IngressClass
+    ingressClass: "higress"
+
+    ## Gateway 部署模式: Deployment 或 DaemonSet
+    kind: Deployment
+
+    ## 使用宿主机网络
+    hostNetwork: false
+
+    ## HPA 配置
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 80
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## 滚动更新配置
+    rollingMaxSurge: "100%"
+    rollingMaxUnavailable: "25%"
+
+    ## Metrics 配置
+    metrics:
+      enabled: false
 
   ## Controller 配置
   controller:
+    ## Controller 副本数
     replicas: 1
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-      limits:
-        cpu: "1"
-        memory: 512Mi
+
+    ## Controller 镜像
+    image: "higress"
+
+    ## Controller 资源配置
+    resources: {}
+    #  requests:
+    #    cpu: 500m
+    #    memory: 2048Mi
+    #  limits:
+    #    cpu: 1000m
+    #    memory: 2048Mi
+
+    ## Controller 服务配置
+    service:
+      type: ClusterIP
+
+    ## HPA 配置
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 80
+
+    ## 自动 HTTPS
+    automaticHttps:
+      enabled: true
+      email: ""
+
+  ## Pilot 配置
+  pilot:
+    ## 采样率
+    traceSampling: 1.0
+
+    ## Pilot 资源
+    resources: {}
+    #  requests:
+    #    cpu: 500m
+    #    memory: 2048Mi
 
   ## 全局配置
   global:
+    ## 监控的命名空间（空为所有）
     watchNamespace: ""
+
+    ## IngressClass 名称
     ingressClass: "higress"
+
+    ## 启用 Istio API
+    enableIstioAPI: true
+
+    ## 启用 Gateway API
+    enableGatewayAPI: true
+
+    ## 启用 Redis
+    enableRedis: false
+
+    ## 启用外部插件服务器
+    enablePluginServer: false
+
+    ## 本地部署模式
+    local: false
+
+    ## 启用 HTTP/3
+    enableH3: false
+
+    ## 启用 IPv6
+    enableIPv6: false
+
+    ## 日志级别
+    logging:
+      level: "default:info"
+
+  ## 追踪配置
+  tracing:
+    enabled: false
+    sampling: 100
+    timeout: 500
+
+  ## 下游连接配置
+  downstream:
+    idleTimeout: 180
+    connectionBufferLimits: 32768
+    http2:
+      maxConcurrentStreams: 100
+
+  ## 上游连接配置
+  upstream:
+    idleTimeout: 10
+    connectionBufferLimits: 10485760
+
+  ## Gzip 压缩配置
+  gzip:
+    enable: true
+    minContentLength: 1024
+    compressionLevel: "BEST_COMPRESSION"
+
+  ## Console 配置
+  console:
+    enabled: false
+
+  ## Redis 配置（内置）
+  redis:
+    enabled: false
+    redis:
+      image: redis-stack-server
+      tag: "7.4.0-v3"
+      replicas: 1
+      persistence:
+        enabled: false
+        size: 1Gi

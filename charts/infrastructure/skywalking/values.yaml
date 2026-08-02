@@ -1,37 +1,152 @@
 skywalking:
   ## OAP Server 配置
   oap:
+    ## OAP 副本数
     replicas: 2
-    resources:
-      requests:
-        cpu: 500m
-        memory: 1Gi
-      limits:
-        cpu: "2"
-        memory: 2Gi
-    storage:
-      type: elasticsearch
-      elasticsearch:
-        hosts: "http://elasticsearch:9200"
+
+    ## OAP 镜像配置
+    image:
+      repository: apache/skywalking-oap-server
+      tag: ""
+      pullPolicy: IfNotPresent
+
+    ## 存储类型: elasticsearch, mysql, h2
+    storageType: "elasticsearch"
+
+    ## JVM 参数
+    javaOpts: "-Xms2g -Xmx2g"
+
+    ## OAP 端口配置
+    ports:
+      grpc: 11800
+      rest: 12800
+      admin: 17128
+
+    ## OAP 服务配置
+    service:
+      type: ClusterIP
+      annotations: {}
+
+    ## 资源配置
+    resources: {}
+    #  requests:
+    #    cpu: "1"
+    #    memory: 2Gi
+    #  limits:
+    #    cpu: "2"
+    #    memory: 4Gi
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## 额外环境变量
+    extraEnvVars: []
+
+    ## 安全上下文
+    securityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+
+    ## 动态配置
+    dynamicConfig:
+      enabled: false
+      period: 60
+
+    ## 探针配置
+    startupProbe:
+      tcpSocket:
+        port: 12800
+      failureThreshold: 30
+      periodSeconds: 10
+    livenessProbe:
+      tcpSocket:
+        port: 12800
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    readinessProbe:
+      tcpSocket:
+        port: 12800
+      initialDelaySeconds: 5
+      periodSeconds: 10
 
   ## UI 配置
   ui:
+    ## UI 副本数
     replicas: 1
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 512Mi
+
+    ## UI 镜像配置
+    image:
+      repository: apache/skywalking-ui
+      tag: ""
+      pullPolicy: IfNotPresent
+
+    ## UI 服务配置
     service:
       type: ClusterIP
-      port: 80
+      externalPort: 80
+      internalPort: 8080
+      loadBalancerIP: ""
+
+    ## Ingress 配置
+    ingress:
+      enabled: false
+      annotations: {}
+      hosts: []
+      #   - skywalking.example.com
+      tls: []
+
+    ## 资源配置
+    resources: {}
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## 持久化配置（审计日志）
+    persistence:
+      enabled: false
+      size: 1Gi
+      storageClassName: ""
+      accessModes:
+        - ReadWriteOnce
+
+    ## 安全上下文
+    securityContext:
+      fsGroup: 101
 
   ## Satellite 配置
   satellite:
     enabled: false
+    replicas: 1
 
   ## Event 配置
   event:
     enabled: false
+
+  ## 内置 Elasticsearch 配置
+  elasticsearch:
+    ## 是否部署内置 ES
+    enabled: true
+
+    ## ES 版本
+    version: "8.18.8"
+
+    ## ES 节点数
+    nodeCount: 3
+
+    ## ES HTTP 配置
+    http:
+      tls:
+        selfSignedCertificate:
+          disabled: true
+
+    ## 外部 ES 配置（当 enabled=false 时生效）
+    config:
+      host: "elasticsearch"
+      port:
+        http: 9200
+      user: ""
+      password: ""

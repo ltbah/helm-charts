@@ -1,10 +1,20 @@
 prometheus:
-  ## Prometheus 服务配置
+  ## Prometheus Server 配置
   server:
+    ## 副本数
     replicaCount: 1
+
+    ## 数据保留时间
+    retention: "15d"
+
+    ## 持久化存储
     persistentVolume:
       enabled: true
       size: 10Gi
+      ## storageClassName: ""  # 使用集群默认 StorageClass
+      ## existingClaim: ""     # 使用已有 PVC
+
+    ## 资源请求与限制
     resources:
       requests:
         cpu: 250m
@@ -13,8 +23,58 @@ prometheus:
         cpu: "1"
         memory: 2Gi
 
-    ## 数据保留时间
-    retention: "15d"
+    ## Service 配置
+    service:
+      type: ClusterIP
+      ports:
+        http: 9090
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## 额外启动参数 (e.g. storage.tsdb.retention.size=10GB)
+    extraArgs: {}
+
+    ## 额外环境变量
+    extraEnvVars: []
+
+    ## 使用自定义 ConfigMap 覆盖 Prometheus 配置
+    configMapOverrideName: ""
+
+    ## Ingress
+    ingress:
+      enabled: false
+      ## hosts:
+      ##   - prometheus.example.com
+      hosts: []
+      ## tls:
+      ##   - secretName: prometheus-tls
+      ##     hosts:
+      ##       - prometheus.example.com
+      tls: []
+
+    ## Pod 注解与标签
+    podAnnotations: {}
+    podLabels: {}
+
+    ## 健康检查
+    readinessProbe:
+      httpGet:
+        path: /-/ready
+        port: 9090
+      initialDelaySeconds: 30
+      timeoutSeconds: 30
+    livenessProbe:
+      httpGet:
+        path: /-/healthy
+        port: 9090
+      initialDelaySeconds: 30
+      timeoutSeconds: 30
+
+    ## 安全上下文
+    securityContext: {}
 
   ## Alertmanager 配置
   alertmanager:
@@ -22,10 +82,44 @@ prometheus:
     persistentVolume:
       enabled: true
       size: 2Gi
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    service:
+      type: ClusterIP
+      port: 9093
+    ingress:
+      enabled: false
+      hosts: []
+      tls: []
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
 
   ## Pushgateway 配置
   pushgateway:
     enabled: true
+    persistentVolume:
+      enabled: false
+      size: 2Gi
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    service:
+      type: ClusterIP
+      port: 9091
+    ingress:
+      enabled: false
+      hosts: []
+      tls: []
 
   ## Node Exporter
   nodeExporter:
@@ -35,9 +129,24 @@ prometheus:
   kubeStateMetrics:
     enabled: true
 
-  ## 服务配置
-  server:
-    service:
-      type: ClusterIP
-      ports:
-        http: 9090
+  ## Prometheus 采集配置
+  serverFiles:
+    prometheus.yml:
+      scrape_configs:
+        - job_name: prometheus
+          static_configs:
+            - targets:
+              - localhost:9090
+
+  ## Alertmanager 告警路由配置
+  alertmanagerFiles:
+    alertmanager.yml:
+      global: {}
+      receivers:
+        - name: default-receiver
+      route:
+        group_by: [alertname]
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 4h
+        receiver: default-receiver

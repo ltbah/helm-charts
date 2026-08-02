@@ -1,23 +1,104 @@
 kibana:
-  ## Elasticsearch 连接配置
+  # -- Elasticsearch hosts (required when no built-in ES)
   elasticsearchHosts: "https://elasticsearch:9200"
 
-  ## 副本数
+  # -- Number of Kibana replicas
   replicas: 1
 
-  ## 资源配置
+  # -- Resource requests and limits
   resources:
     requests:
-      cpu: 250m
-      memory: 512Mi
+      cpu: "500m"
+      memory: "1Gi"
     limits:
       cpu: "1"
-      memory: 1Gi
+      memory: "2Gi"
 
-  ## 服务配置
+  # -- Service configuration
   service:
     type: ClusterIP
     port: 5601
+    annotations: {}
 
-  ## 安全配置
+  # -- Persistence for Kibana data
+  persistence:
+    enabled: false
+    size: 1Gi
+    storageClassName: ""
+
+  # -- Ingress configuration
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: kibana.local
+        paths:
+          - path: /
+    tls: []
+    #  - secretName: kibana-tls
+    #    hosts:
+    #      - kibana.local
+
+  # -- Node selector for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
+  # -- Affinity for pod assignment
+  affinity: {}
+
+  # -- Annotations for Kibana pods
+  podAnnotations: {}
+
+  # -- Extra labels for Kibana pods
+  podLabels: {}
+
+  # -- Extra environment variables
+  extraEnvs: []
+    # - name: NODE_OPTIONS
+    #   value: "--max-old-space-size=2048"
+
+  # -- Kibana configuration (kibana.yml)
+  kibanaConfig: {}
+    # kibana.yml: |
+    #   server.name: kibana
+    #   server.host: "0.0.0.0"
+    #   elasticsearch.hosts: ["https://elasticsearch:9200"]
+
+  # -- Protocol (http or https)
   protocol: https
+
+  # -- TLS configuration
+  tls:
+    enabled: false
+    certificatesSecret: ""
+
+  # -- Readiness probe configuration
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 3
+    timeoutSeconds: 5
+
+  # -- Liveness probe configuration
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  # -- Security context for the pod
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  # -- File system group for volumes
+  fsGroup: 1000

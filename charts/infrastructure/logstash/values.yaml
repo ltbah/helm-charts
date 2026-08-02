@@ -1,48 +1,107 @@
 logstash:
-  ## Elasticsearch 连接配置
+  # -- Elasticsearch hosts (required)
   elasticsearchHosts: "https://elasticsearch:9200"
 
-  ## 副本数
+  # -- Number of Logstash replicas
   replicas: 2
 
-  ## 持久化存储
-  persistence:
-    enabled: true
-    volumeClaimTemplate:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 5Gi
+  # -- JVM heap size
+  heapSize: "1g"
 
-  ## 资源配置
+  # -- Resource requests and limits
   resources:
     requests:
-      cpu: 250m
-      memory: 1Gi
+      cpu: "500m"
+      memory: "1Gi"
     limits:
       cpu: "1"
-      memory: 2Gi
+      memory: "2Gi"
 
-  ## JVM 堆内存
-  logstashJavaOpts: "-Xms1g -Xmx1g"
+  # -- Persistence for Logstash data
+  persistence:
+    enabled: false
+    size: 2Gi
+    storageClassName: ""
 
-  ## 服务配置
+  # -- Service configuration
   service:
     type: ClusterIP
     ports:
-      http: 8080
+      - name: http
+        port: 8080
+        targetPort: 8080
+      - name: beats
+        port: 5044
+        targetPort: 5044
 
-  ## Pipeline 配置
-  logstashPipeline:
-    main.conf: |
-      input {
-        beats {
-          port => 5044
-        }
-      }
-      output {
-        elasticsearch {
-          hosts => ["https://elasticsearch:9200"]
-          index => "logstash-%{+YYYY.MM.dd}"
-        }
-      }
+  # -- Logstash pipeline configuration
+  logstashPipeline: {}
+    # logstash.conf: |
+    #   input {
+    #     beats {
+    #       port => 5044
+    #     }
+    #   }
+    #   filter {
+    #     grok {
+    #       match => { "message" => "%{COMBINEDAPACHELOG}" }
+    #     }
+    #   }
+    #   output {
+    #     elasticsearch {
+    #       hosts => ["https://elasticsearch:9200"]
+    #       index => "logstash-%{+YYYY.MM.dd}"
+    #     }
+    #   }
+
+  # -- Node selector for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
+  # -- Affinity for pod assignment
+  affinity: {}
+
+  # -- Extra environment variables
+  extraEnvs: []
+    # - name: LOG_LEVEL
+    #   value: "info"
+
+  # -- Java options for Logstash
+  lsJavaOpts: "-Xms1g -Xmx1g"
+
+  # -- Readiness probe configuration
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 3
+    timeoutSeconds: 5
+
+  # -- Liveness probe configuration
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    failureThreshold: 3
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  # -- Ingress configuration
+  ingress:
+    enabled: false
+    hosts: []
+      # - host: logstash.local
+      #   paths:
+      #     - path: /
+      #       port: 8080
+    tls: []
+    #  - secretName: logstash-tls
+    #    hosts:
+    #      - logstash.local

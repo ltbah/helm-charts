@@ -2,22 +2,78 @@ zipkin:
   ## Zipkin 副本数
   replicaCount: 1
 
+  ## 镜像配置
+  image:
+    repository: openzipkin/zipkin-slim
+    tag: ""
+    pullPolicy: IfNotPresent
+
   ## 资源配置
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
+  resources: {}
+  #  requests:
+  #    cpu: 100m
+  #    memory: 256Mi
+  #  limits:
+  #    cpu: 500m
+  #    memory: 512Mi
 
   ## 服务配置
   service:
     type: ClusterIP
     port: 9411
+    annotations: {}
 
   ## 存储配置
   storage:
+    ## 存储类型: mem, elasticsearch, cassandra
     type: mem
-    # elasticsearch:
-    #   hosts: elasticsearch:9200
+    elasticsearch:
+      ## ES 主机地址（type=elasticsearch 时必填）
+      hosts: ""
+      ## ES 索引分片数
+      indexShards: 5
+      ## ES 索引副本数
+      indexReplicas: 1
+      ## ES 用户名
+      username: ""
+      ## ES 密码
+      password: ""
+
+  ## Ingress 配置
+  ingress:
+    enabled: false
+    annotations: {}
+    hosts: []
+    #   - zipkin.example.com
+    tls: []
+
+  ## 节点调度
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  ## 额外环境变量（如 JAVA_OPTS）
+  extraEnv: {}
+
+  ## Pod 注解
+  podAnnotations:
+    sidecar.istio.io/inject: "false"
+
+  ## 安全上下文
+  securityContext:
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  ## ServiceMonitor 配置
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    labels: {}
+
+  ## HPA 配置
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80

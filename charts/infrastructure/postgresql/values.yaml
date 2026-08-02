@@ -1,16 +1,41 @@
 postgresql:
-  ## PostgreSQL 认证配置
-  auth:
-    postgresPassword: ""
-    database: "appdb"
-    username: "appuser"
-    password: ""
+  ## ------------------------------------------------------------------
+  ## Architecture: standalone (单节点) or replication (主从复制)
+  ## ------------------------------------------------------------------
+  architecture: standalone
 
-  ## 持久化存储
+  ## ------------------------------------------------------------------
+  ## Authentication
+  ## ------------------------------------------------------------------
+  auth:
+    ## [REQUIRED] postgres 超级用户密码，必须设置
+    postgresPassword: ""
+    ## 默认创建的数据库名
+    database: "appdb"
+    ## 默认创建的普通用户名
+    username: "appuser"
+    ## [REQUIRED] 普通用户密码，必须设置
+    password: ""
+    ## 复制用户名 (仅 replication 架构)
+    replicationUsername: "repl_user"
+    ## [REQUIRED when architecture=replication] 复制用户密码
+    replicationPassword: ""
+    ## 使用已有 Secret 替代内建密码 (Secret 需包含对应 key)
+    ## 设置后上述密码参数将被忽略
+    existingSecret: ""
+
+  ## ------------------------------------------------------------------
+  ## Primary 节点配置
+  ## ------------------------------------------------------------------
   primary:
+    ## 持久化存储
     persistence:
       enabled: true
       size: 8Gi
+      storageClassName: ""
+      existingClaim: ""
+
+    ## 容器资源
     resources:
       requests:
         cpu: 250m
@@ -19,11 +44,149 @@ postgresql:
         cpu: "1"
         memory: 1Gi
 
-  ## 服务配置
-  service:
-    type: ClusterIP
-    port: 5432
+    ## Service
+    service:
+      type: ClusterIP
+      ports:
+        postgresql: 5432
 
-  ## metrics 监控
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## 额外环境变量 (value 以 EnvVar 对象列表形式传入)
+    extraEnvVars: []
+    #  - name: TZ
+    #    value: "Asia/Shanghai"
+
+    ## 初始化脚本 (键值对，键为文件名，值为 SQL/SH 内容)
+    initdbScripts: {}
+    #  my_init.sql: |
+    #    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+    ## 健康检查 — Readiness
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
+      successThreshold: 1
+
+    ## 健康检查 — Liveness
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
+      successThreshold: 1
+
+    ## 健康检查 — Startup (慢启动场景)
+    startupProbe:
+      enabled: false
+      initialDelaySeconds: 0
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
+      successThreshold: 1
+
+    ## Pod 标注与标签
+    podAnnotations: {}
+    podLabels: {}
+
+    ## PriorityClass
+    priorityClassName: ""
+
+    ## 容器级安全上下文
+    containerSecurityContext:
+      enabled: false
+      runAsUser: 1001
+      runAsNonRoot: true
+      readOnlyRootFilesystem: false
+
+    ## Pod 级安全上下文
+    podSecurityContext:
+      enabled: false
+      fsGroup: 1001
+
+  ## ------------------------------------------------------------------
+  ## Read Replicas (仅 architecture=replication 时生效)
+  ## ------------------------------------------------------------------
+  readReplicas:
+    ## 副本数
+    replicaCount: 1
+
+    ## 持久化存储
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClassName: ""
+      existingClaim: ""
+
+    ## 容器资源
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+    ## Service
+    service:
+      type: ClusterIP
+      ports:
+        postgresql: 5432
+
+    ## 节点调度
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    ## Pod 标注与标签
+    podAnnotations: {}
+    podLabels: {}
+
+    ## PriorityClass
+    priorityClassName: ""
+
+    ## 容器级安全上下文
+    containerSecurityContext:
+      enabled: false
+      runAsUser: 1001
+      runAsNonRoot: true
+      readOnlyRootFilesystem: false
+
+    ## Pod 级安全上下文
+    podSecurityContext:
+      enabled: false
+      fsGroup: 1001
+
+  ## ------------------------------------------------------------------
+  ## Metrics (Prometheus Exporter)
+  ## ------------------------------------------------------------------
   metrics:
+    enabled: false
+    service:
+      port: 9187
+
+  ## ------------------------------------------------------------------
+  ## TLS
+  ## ------------------------------------------------------------------
+  tls:
+    enabled: false
+    certificatesSecret: ""
+
+  ## ------------------------------------------------------------------
+  ## Network Policy
+  ## ------------------------------------------------------------------
+  networkPolicy:
+    enabled: false
+
+  ## ------------------------------------------------------------------
+  ## Volume Permissions (initContainer 修改卷权限)
+  ## ------------------------------------------------------------------
+  volumePermissions:
     enabled: false

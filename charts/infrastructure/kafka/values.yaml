@@ -1,5 +1,9 @@
 kafka:
-  ## Kafka 监听器配置
+  ## KRaft 模式（无需 ZooKeeper，推荐开启）
+  kraft:
+    enabled: true
+
+  ## 监听器协议配置
   listeners:
     client:
       protocol: PLAINTEXT
@@ -8,16 +12,13 @@ kafka:
     controller:
       protocol: PLAINTEXT
 
-  ## KRaft 模式（无需 ZooKeeper）
-  kraft:
-    enabled: true
-
-  ## Controller 配置
+  ## Controller 配置（KRaft 模式下的控制器节点）
   controller:
     replicaCount: 3
     persistence:
       enabled: true
       size: 8Gi
+      storageClassName: ""
     resources:
       requests:
         cpu: 250m
@@ -25,13 +26,18 @@ kafka:
       limits:
         cpu: "1"
         memory: 1Gi
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    extraEnvVars: []
 
-  ## Broker 配置
+  ## Broker 配置（KRaft 模式下的 Broker 节点）
   broker:
     replicaCount: 3
     persistence:
       enabled: true
       size: 8Gi
+      storageClassName: ""
     resources:
       requests:
         cpu: 250m
@@ -39,13 +45,57 @@ kafka:
       limits:
         cpu: "1"
         memory: 1Gi
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
 
   ## 服务配置
   service:
     type: ClusterIP
     ports:
       client: 9092
+      interbroker: 9093
+      controller: 9094
 
-  ## metrics 监控
+  ## Kafka Exporter 指标监控
   metrics:
+    enabled: false
+    ## JMX 指标采集
+    jmx:
+      enabled: false
+
+  ## TLS 加密配置
+  tls:
+    enabled: false
+    certificatesSecret: ""
+
+  ## 额外 Kafka 配置（写入 server.properties）
+  extraConfig: ""
+
+  ## 日志持久化
+  logPersistence:
+    enabled: false
+    size: 8Gi
+    storageClassName: ""
+
+  ## Inter-Broker 协议版本（降级/升级时使用）
+  interBrokerProtocolVersion: ""
+
+  ## ZooKeeper 配置（非 KRaft 模式下使用）
+  zookeeper:
+    enabled: false
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClassName: ""
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+
+  ## 卷权限初始化
+  volumePermissions:
     enabled: false

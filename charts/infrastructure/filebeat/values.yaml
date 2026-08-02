@@ -1,47 +1,79 @@
 filebeat:
-  ## Filebeat 配置
-  filebeatConfig:
-    filebeat.yml: |
-      filebeat.inputs:
-        - type: log
-          enabled: true
-          paths:
-            - /var/log/*.log
-            - /var/log/app/*.log
-          fields_under_root: true
-          fields:
-            app: java-app
+  # -- Filebeat configuration (filebeat.yml)
+  filebeatConfig: {}
+    # filebeat.yml: |
+    #   filebeat.inputs:
+    #   - type: log
+    #     enabled: true
+    #     paths:
+    #       - /var/log/*.log
+    #   output.elasticsearch:
+    #     hosts: ["https://elasticsearch:9200"]
+    #   output.logstash:
+    #     hosts: ["logstash:5044"]
 
-      output.logstash:
-        hosts: ["logstash:8080"]
-
-      # 如果不使用 Logstash，直接输出到 Elasticsearch
-      # output.elasticsearch:
-      #   hosts: ["https://elasticsearch:9200"]
-
-  ## 资源配置
+  # -- Resource requests and limits
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: "100m"
+      memory: "200Mi"
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: "500m"
+      memory: "500Mi"
 
-  ## 安全配置
+  # -- Extra environment variables
+  extraEnvs: []
+    # - name: LOG_LEVEL
+    #   value: "info"
+
+  # -- Node selector for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
+  # -- Affinity for pod assignment
+  affinity: {}
+
+  # -- Secret mounts (e.g. for TLS certificates)
   secretMounts: []
+    # - name: elasticsearch-certs
+    #   secretName: elasticsearch-certs
+    #   path: /usr/share/filebeat/certs
 
-  ## DaemonSet 配置
-  daemonset:
-    filebeatConfig:
-      filebeat.yml: |
-        filebeat.inputs:
-          - type: container
-            paths:
-              - /var/log/containers/*.log
-            processors:
-              - add_kubernetes_metadata:
-                  host: ${NODE_NAME}
-                  matchers:
-                    - logs_path:
-                        logs_path: "/var/log/containers/"
+  # -- Persistence for Filebeat data
+  persistence:
+    enabled: false
+    size: 1Gi
+
+  # -- Readiness probe configuration
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 3
+    timeoutSeconds: 5
+
+  # -- Liveness probe configuration
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 20
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  # -- Service configuration
+  service:
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 5066
+        targetPort: 5066
+
+  # -- Ingress configuration
+  ingress:
+    enabled: false
+    hosts: []
+      # - host: filebeat.local
+      #   paths:
+      #     - path: /
