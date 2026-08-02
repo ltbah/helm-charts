@@ -6,5 +6,5 @@ version: 1.0.0
 appVersion: "3.4"
 dependencies:
   - name: zipkin
-    version: "1.x.x"
+    version: "0.x.x"
     repository: https://zipkin.io/zipkin-helm

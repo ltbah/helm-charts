@@ -1,8 +1,8 @@
 # Helm 仓库依赖配置
 # 用于 CI 流程中添加依赖仓库
+# 注意: Bitnami 已迁移到 OCI registry (oci://registry-1.docker.io/bitnamicharts)
+# OCI 依赖不需要 helm repo add，直接在 Chart.yaml 中使用 oci:// URL
 repos:
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
   - name: elastic
     url: https://helm.elastic.co
   - name: prometheus-community

@@ -31,7 +31,6 @@ jobs:
 
       - name: Add dependency repos
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add elastic https://helm.elastic.co
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo add grafana https://grafana.github.io/helm-charts
@@ -45,13 +44,13 @@ jobs:
           for chart in charts/infrastructure/*/; do
             if [ -f "${chart}Chart.yaml" ]; then
               echo "Updating dependencies for ${chart}"
-              helm dependency update "${chart}" || true
+              helm dependency update "${chart}"
             fi
           done
           for chart in charts/custom/*/; do
             if [ -f "${chart}Chart.yaml" ]; then
               echo "Updating dependencies for ${chart}"
-              helm dependency update "${chart}" || true
+              helm dependency update "${chart}"
             fi
           done
 

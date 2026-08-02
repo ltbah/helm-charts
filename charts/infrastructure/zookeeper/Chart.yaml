@@ -7,4 +7,4 @@ appVersion: "3.9"
 dependencies:
   - name: zookeeper
     version: "13.x.x"
-    repository: https://charts.bitnami.com/bitnami
+    repository: oci://registry-1.docker.io/bitnamicharts
