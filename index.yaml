@@ -3,13 +3,13 @@ entries:
   elasticsearch:
   - apiVersion: v2
     appVersion: "8.15"
-    created: "2026-08-03T14:02:01.855673828Z"
+    created: "2026-08-03T14:07:45.842108237Z"
     dependencies:
     - name: elasticsearch
       repository: https://helm.elastic.co
       version: 8.5.x
     description: Elasticsearch wrapper Chart for log storage and search
-    digest: cf0afaa7fd97a7278c0282a1d51b41f73a8f0503d4ceb25d9798b6022579104c
+    digest: cf8e059d53c85e83adfcfeaaad5262babaad0fb773fc00b8e28b4870073bc6ab
     name: elasticsearch
     type: application
     urls:
@@ -18,13 +18,13 @@ entries:
   filebeat:
   - apiVersion: v2
     appVersion: "8.15"
-    created: "2026-08-03T14:02:01.857797269Z"
+    created: "2026-08-03T14:07:45.843313268Z"
     dependencies:
     - name: filebeat
       repository: https://helm.elastic.co
       version: 8.5.x
     description: Filebeat wrapper Chart for log collection
-    digest: f3a3e5ab0c79ce509b8013131e53a7794850dfc4d33442874bd9de63ec8e01d1
+    digest: 158fd70ee113c8dfccd18070fb4d7365d0cecb399547c8c7ae9716e836015ae9
     name: filebeat
     type: application
     urls:
@@ -33,9 +33,9 @@ entries:
   filebrowser:
   - apiVersion: v2
     appVersion: 2.32.0
-    created: "2026-08-03T14:02:01.858560746Z"
+    created: "2026-08-03T14:07:45.843941422Z"
     description: FileBrowser Quantum - web-based file manager
-    digest: 17a4acf85edfc9791bd8fef4b71dbbcf530a73d3f7fbdfa8424f6d66943f567b
+    digest: 29e8a1ae1411fb1cd3e2e0762dee3d5107e788e39b004c288bb1b8de857ce23d
     home: https://github.com/gtsteffaniak/filebrowser
     keywords:
     - filebrowser
@@ -51,28 +51,28 @@ entries:
   grafana:
   - apiVersion: v2
     appVersion: "11.2"
-    created: "2026-08-03T14:02:01.86271598Z"
+    created: "2026-08-03T14:07:45.847531301Z"
     dependencies:
     - name: grafana
       repository: https://grafana.github.io/helm-charts
       version: 8.x.x
     description: Grafana wrapper Chart for data visualization and dashboards
-    digest: 6e4880ba8c7f78adf075b1b44184caa3b3cee4bd63b8a2d10fb0fba563e36676
+    digest: d00f1f28adbb21a20044604811f916468aa45d33289cf7f2c113d60808ee26e2
     name: grafana
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/grafana-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/grafana-1.0.2.tgz
+    version: 1.0.2
   higress:
   - apiVersion: v2
     appVersion: "2.0"
-    created: "2026-08-03T14:02:01.866515769Z"
+    created: "2026-08-03T14:07:45.851575349Z"
     dependencies:
     - name: higress
       repository: https://higress.io/helm-charts
       version: 2.x.x
     description: Higress wrapper Chart for cloud-native API gateway
-    digest: 5909f4c9dc147f503bed46d488c8f1011533df07f271d217df987e417cf0cee6
+    digest: b88b0ae3036e70e30f551549c7d6e7d290d559f1d9f7aa3720b2bbb6e76c64eb
     name: higress
     type: application
     urls:
@@ -81,28 +81,28 @@ entries:
   kafka:
   - apiVersion: v2
     appVersion: "3.8"
-    created: "2026-08-03T14:02:01.875696984Z"
+    created: "2026-08-03T14:07:45.859957865Z"
     dependencies:
     - name: kafka
       repository: oci://registry-1.docker.io/bitnamicharts
       version: 30.x.x
     description: Kafka wrapper Chart
-    digest: 0b79a440fb7ce82a9999b5f2bc670c4f0cdca84c3978da93ccf6c292d4c9998a
+    digest: cafcef72d5e8dd25495e0f7791eca97812fedffcb8b1b2a2d7f26f2c5ccf16c1
     name: kafka
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/kafka-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/kafka-1.0.2.tgz
+    version: 1.0.2
   kibana:
   - apiVersion: v2
     appVersion: "8.15"
-    created: "2026-08-03T14:02:01.877520264Z"
+    created: "2026-08-03T14:07:45.861026422Z"
     dependencies:
     - name: kibana
       repository: https://helm.elastic.co
       version: 8.5.x
     description: Kibana wrapper Chart for Elasticsearch visualization
-    digest: 56a118f2541a0e5583654d931ed5750e7b41e56b5cc87261202d66bde83cc48e
+    digest: 8931a1af3861401e61e274bacf9ef62cd0481c2270f1ebe76187b9444a39f33f
     name: kibana
     type: application
     urls:
@@ -111,13 +111,13 @@ entries:
   logstash:
   - apiVersion: v2
     appVersion: "8.15"
-    created: "2026-08-03T14:02:01.879011224Z"
+    created: "2026-08-03T14:07:45.862199704Z"
     dependencies:
     - name: logstash
       repository: https://helm.elastic.co
       version: 8.5.x
     description: Logstash wrapper Chart for log processing pipeline
-    digest: d50fb8ec189f46aa8d73fc4712ae51c2de29a04ab01f8394c023ccaba7dd41ec
+    digest: 306e0ed012237e8288218c31b9b1fcdb9c6096beaf67db6194d577e45756f15f
     name: logstash
     type: application
     urls:
@@ -126,7 +126,7 @@ entries:
   minio:
   - apiVersion: v2
     appVersion: "2024.11"
-    created: "2026-08-03T14:02:01.880944559Z"
+    created: "2026-08-03T14:07:45.864083324Z"
     dependencies:
     - alias: operator
       condition: operator.enabled
@@ -139,48 +139,48 @@ entries:
       repository: https://minio.github.io/operator
       version: 6.x.x
     description: MinIO wrapper Chart
-    digest: 5080b2235e61166c99cd3b02fb9e9a28e60808eccde7119cbf0f395b101842cf
+    digest: c33f22b2314d55c3439af4c5e3b58abc6cc1ca76469ca05f900a10358f9d5511
     name: minio
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/minio-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/minio-1.0.2.tgz
+    version: 1.0.2
   mongodb:
   - apiVersion: v2
     appVersion: "7.0"
-    created: "2026-08-03T14:02:01.887147018Z"
+    created: "2026-08-03T14:07:45.870166011Z"
     dependencies:
     - name: mongodb
       repository: oci://registry-1.docker.io/bitnamicharts
       version: 15.x.x
     description: MongoDB wrapper Chart
-    digest: cb54a180b3a562ea2de32392c990c8392b695c633f9dfb66d95a7e59e66ed5ee
+    digest: 580acce55a3f661fc392e6ebcfcf39a9f7669249da54be2574d251380091bfe3
     name: mongodb
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/mongodb-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/mongodb-1.0.2.tgz
+    version: 1.0.2
   mysql:
   - apiVersion: v2
     appVersion: "8.0"
-    created: "2026-08-03T14:02:01.89131461Z"
+    created: "2026-08-03T14:07:45.875516126Z"
     dependencies:
     - name: mysql
       repository: oci://registry-1.docker.io/bitnamicharts
       version: 12.x.x
     description: MySQL wrapper Chart
-    digest: 5869c2c0177ca6f4071259ab8484c1b372566fc9d19c96590dd1da5f84381049
+    digest: 5c025910737c7c8bf5f7a25de55ab8068951c80413ae516a82816e75a3b17e9e
     name: mysql
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/mysql-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/mysql-1.0.2.tgz
+    version: 1.0.2
   nacos:
   - apiVersion: v2
     appVersion: 3.0.1
-    created: "2026-08-03T14:02:01.891831066Z"
+    created: "2026-08-03T14:07:45.876004298Z"
     description: A Helm chart for Kubernetes
-    digest: dd0226436819b1175404ff1f5e17e4a085a888c2ff1e5c5141b62df41470187e
+    digest: 0f836614ba364a11417765e0440696595cb3e161fb569b9cdb8d83d1f773c5cf
     home: https://nacos.io/
     icon: https://img.alicdn.com/imgextra/i4/O1CN01rW3vAB1FDWKSOiFf0_!!6000000000453-2-tps-204-40.png
     maintainers:
@@ -203,7 +203,7 @@ entries:
       artifacthub.io/prerelease: "false"
     apiVersion: v2
     appVersion: 0.2.0
-    created: "2026-08-03T14:02:01.895585857Z"
+    created: "2026-08-03T14:07:45.878869873Z"
     dependencies:
     - name: opensandbox-controller
       repository: file://charts/opensandbox-controller
@@ -212,7 +212,7 @@ entries:
       repository: file://charts/opensandbox-server
       version: 0.1.0
     description: All-in-one Helm chart for deploying OpenSandbox controller and server
-    digest: 9c6d7cdea8eef4a71952d2eca1078e4c04d3a5deb49ab1103157f3c7f2cbfd99
+    digest: 894d8f6b45121de2cdb804e3b7ecc585e3fec37aed52cf5915bee506b22d5e70
     home: https://github.com/opensandbox-group/OpenSandbox
     keywords:
     - sandbox
@@ -235,24 +235,24 @@ entries:
   postgresql:
   - apiVersion: v2
     appVersion: "16"
-    created: "2026-08-03T14:02:01.900577738Z"
+    created: "2026-08-03T14:07:45.884707835Z"
     dependencies:
     - name: postgresql
       repository: oci://registry-1.docker.io/bitnamicharts
       version: 16.x.x
     description: PostgreSQL wrapper Chart
-    digest: 2bbb170ba4629bec1f1e57ac402e79b088fb71e6f7bdec76b9d8e58688739706
+    digest: a70e9b4b03063d047e07e8426eb7073020c29bde7b76d157d1962bfc5824791c
     name: postgresql
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/postgresql-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/postgresql-1.0.2.tgz
+    version: 1.0.2
   powerjob:
   - apiVersion: v2
     appVersion: 4.3.9
-    created: "2026-08-03T14:02:01.901127925Z"
+    created: "2026-08-03T14:07:45.885244889Z"
     description: PowerJob distributed computing and task scheduling framework
-    digest: 19641b8bf995e6c0e954de6b80cb8206694caffd77075da256ebcefd9c0de91c
+    digest: 0719f16e2a1b842e6565ad61b467cebfc1e7c1be5ebcdb5a497b37db8d40a323
     home: https://github.com/PowerJob/PowerJob
     keywords:
     - powerjob
@@ -269,39 +269,39 @@ entries:
   prometheus:
   - apiVersion: v2
     appVersion: "2.54"
-    created: "2026-08-03T14:02:01.908826993Z"
+    created: "2026-08-03T14:07:45.893156463Z"
     dependencies:
     - name: prometheus
       repository: https://prometheus-community.github.io/helm-charts
       version: 25.x.x
     description: Prometheus wrapper Chart for monitoring and alerting
-    digest: b729e876b2ead880fc8b31ba7790f43d834ea369a24d012ebc6792f7f5e7ad22
+    digest: dd5fea384df9ffcce910bdfcea838d8c3024cfc78f9e1cfb4d98164f5d38c0e5
     name: prometheus
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/prometheus-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/prometheus-1.0.2.tgz
+    version: 1.0.2
   redis:
   - apiVersion: v2
     appVersion: "7.2"
-    created: "2026-08-03T14:02:01.914849211Z"
+    created: "2026-08-03T14:07:45.89823365Z"
     dependencies:
     - name: redis
       repository: oci://registry-1.docker.io/bitnamicharts
       version: 19.x.x
     description: Redis wrapper Chart
-    digest: 9d6ba936e9b52ebc434d848969152ab9e7f2f3737e27aa166a2e5508879bb47a
+    digest: 79e5a7533ef9bdf98e53271e77c34e508ad54bbf53f360ce3bc710208f16bb89
     name: redis
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/redis-1.0.1.tgz
-    version: 1.0.1
+    - https://ltbah.github.io/helm-charts/redis-1.0.2.tgz
+    version: 1.0.2
   rocketmq-operator:
   - apiVersion: v2
     appVersion: 0.3.0
-    created: "2026-08-03T14:02:01.918483462Z"
+    created: "2026-08-03T14:07:45.901559874Z"
     description: A Helm chart for Kubernetes
-    digest: ef2d6eace61ba8bfcfe6004ad618a796feb5b12d492aa29fc522ce761d3bbb87
+    digest: b7fc0cbe0b005208fb4354d95b9cfcc123731a0e8d4571e6465023280f781c30
     name: rocketmq-operator
     type: application
     urls:
@@ -310,9 +310,9 @@ entries:
   seata-server:
   - apiVersion: v2
     appVersion: 2.0.0
-    created: "2026-08-03T14:02:01.919228782Z"
+    created: "2026-08-03T14:07:45.902319865Z"
     description: A Helm chart for deploying Apache Seata Server on Kubernetes
-    digest: 04bf65c516465a5c52f581ac6f54996b23914b888123932f36ca5593488ed8d1
+    digest: e135107ee52214efc01db54bb69c10fae0edc8eea73776f43c8a068a8247b0de
     home: https://seata.apache.org/
     icon: https://avatars.githubusercontent.com/u/63743798?s=200&v=4
     keywords:
@@ -333,13 +333,13 @@ entries:
   skywalking:
   - apiVersion: v2
     appVersion: "10.0"
-    created: "2026-08-03T14:02:01.921809139Z"
+    created: "2026-08-03T14:07:45.904821159Z"
     dependencies:
     - name: skywalking
       repository: https://apache.jfrog.io/artifactory/skywalking-helm
       version: 4.x.x
     description: Apache SkyWalking wrapper Chart for distributed tracing and APM
-    digest: 9e1195ee782e960b7c37badb5e3094abe657837bcbeebf992585442286bfee91
+    digest: 9cb03a038762bea805d0514364c8a661e1aad4f8b3700c56688bd24ebee655dd
     name: skywalking
     type: application
     urls:
@@ -348,14 +348,14 @@ entries:
   xxl-job:
   - apiVersion: v2
     appVersion: 2.4.2
-    created: "2026-08-03T14:02:01.925941848Z"
+    created: "2026-08-03T14:07:45.909436333Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
       repository: https://charts.bitnami.com/bitnami
       version: 12.x.x
     description: XXL-JOB distributed task scheduling platform
-    digest: 2bef1125b36a32e43d419e4fd5525b4f39919c486fd0b93068c16abfe292f278
+    digest: bb919b48565b5f789378206d58547edf4f5d30cb5fe7f8c34a3c4a404d1f8065
     home: https://github.com/xuxueli/xxl-job
     keywords:
     - xxl-job
@@ -371,13 +371,13 @@ entries:
   zipkin:
   - apiVersion: v2
     appVersion: "3.4"
-    created: "2026-08-03T14:02:01.926875601Z"
+    created: "2026-08-03T14:07:45.910640694Z"
     dependencies:
     - name: zipkin
       repository: https://zipkin.io/zipkin-helm
       version: 0.x.x
     description: Zipkin wrapper Chart for distributed tracing
-    digest: deec50eb55ef7003ce8f5bff122710008ae3f340789000843c8386df5260c571
+    digest: d3671d66c15ae2a11c553c830a552b185f68a0a98e0753e7319327be34e7116d
     name: zipkin
     type: application
     urls:
@@ -386,16 +386,16 @@ entries:
   zookeeper:
   - apiVersion: v2
     appVersion: "3.9"
-    created: "2026-08-03T14:02:01.930782722Z"
+    created: "2026-08-03T14:07:45.913642994Z"
     dependencies:
     - name: zookeeper
       repository: oci://registry-1.docker.io/bitnamicharts
       version: 13.x.x
     description: ZooKeeper wrapper Chart
-    digest: 378a30c90d676eed4d4d3d427ecbadb2866d6da7b41819e9ab5d0de1ea32a311
+    digest: 8843b526a30580c95be4fb93faca93de01bbdeaa0004e402b2c5879cb7c48557
     name: zookeeper
     type: application
     urls:
-    - https://ltbah.github.io/helm-charts/zookeeper-1.0.1.tgz
-    version: 1.0.1
-generated: "2026-08-03T14:02:01.852303885Z"
+    - https://ltbah.github.io/helm-charts/zookeeper-1.0.2.tgz
+    version: 1.0.2
+generated: "2026-08-03T14:07:45.840050181Z"
