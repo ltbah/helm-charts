@@ -104,3 +104,7 @@ grafana:
 
   ## 插件列表 (e.g. grafana-clock-panel, grafana-piechart-panel)
   plugins: []
+
+## 全局镜像仓库配置（Bitnami 镜像已迁移至 bitnamilegacy）
+global:
+  imageRegistry: docker.io/bitnamilegacy

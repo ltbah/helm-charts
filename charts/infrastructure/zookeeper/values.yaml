@@ -142,3 +142,7 @@ zookeeper:
   ## 日志级别 (INFO / WARN / ERROR / DEBUG)
   ## ------------------------------------------------------------------
   logLevel: "INFO"
+
+## 全局镜像仓库配置（Bitnami 镜像已迁移至 bitnamilegacy）
+global:
+  imageRegistry: docker.io/bitnamilegacy

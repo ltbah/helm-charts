@@ -117,3 +117,7 @@ kafka:
   ## 卷权限初始化
   volumePermissions:
     enabled: false
+
+## 全局镜像仓库配置（Bitnami 镜像已迁移至 bitnamilegacy）
+global:
+  imageRegistry: docker.io/bitnamilegacy
