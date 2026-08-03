@@ -2,7 +2,7 @@ apiVersion: v2
 name: mysql
 description: MySQL wrapper Chart
 type: application
-version: 1.0.1
+version: 1.0.2
 appVersion: "8.0"
 dependencies:
   - name: mysql

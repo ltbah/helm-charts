@@ -2,7 +2,7 @@ apiVersion: v2
 name: minio
 description: MinIO wrapper Chart
 type: application
-version: 1.0.1
+version: 1.0.2
 appVersion: "2024.11"
 dependencies:
   - name: operator
