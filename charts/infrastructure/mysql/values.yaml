@@ -1,10 +1,4 @@
 mysql:
-  ## 镜像配置
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
-
   ## MySQL 架构模式: standalone 或 replication
   architecture: standalone
 

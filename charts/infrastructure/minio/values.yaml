@@ -1,10 +1,4 @@
 minio:
-  ## 镜像配置
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
-
   ## Ingress 配置
   ingress:
     enabled: false

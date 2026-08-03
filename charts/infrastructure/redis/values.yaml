@@ -1,10 +1,4 @@
 redis:
-  ## 镜像配置
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
-
   ## ------------------------------------------------------------------
   ## Architecture: standalone (单节点) or replication (主从复制)
   ## ------------------------------------------------------------------

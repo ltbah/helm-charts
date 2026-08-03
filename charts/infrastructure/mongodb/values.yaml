@@ -1,10 +1,4 @@
 mongodb:
-  ## 镜像配置
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
-
   ## ------------------------------------------------------------------
   ## Architecture: standalone (单节点) or replicaset (副本集)
   ## ------------------------------------------------------------------
