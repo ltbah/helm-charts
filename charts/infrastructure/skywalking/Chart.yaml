@@ -2,7 +2,7 @@ apiVersion: v2
 name: skywalking
 description: Apache SkyWalking wrapper Chart for distributed tracing and APM
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "10.0"
 dependencies:
   - name: skywalking

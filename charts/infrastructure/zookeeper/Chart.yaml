@@ -2,7 +2,7 @@ apiVersion: v2
 name: zookeeper
 description: ZooKeeper wrapper Chart
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "3.9"
 dependencies:
   - name: zookeeper

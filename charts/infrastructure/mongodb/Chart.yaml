@@ -2,7 +2,7 @@ apiVersion: v2
 name: mongodb
 description: MongoDB wrapper Chart
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "7.0"
 dependencies:
   - name: mongodb
